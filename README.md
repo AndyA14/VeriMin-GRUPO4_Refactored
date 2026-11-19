@@ -20,7 +20,7 @@ Aplicación móvil (React Native + Expo) para auditar perfiles públicos de crea
 | Diseño táctico DDD (Confluence) | https://verimind.atlassian.net/wiki/external/N2ZjOTc4ZDk3ODgwNGZmYzgwMTlmNzAzYTcxMWMxMmY |
 | Arquitectura hexagonal (Confluence) | https://verimind.atlassian.net/wiki/external/ZGM2ZjdjZDBkZTgzNDhmODgwNmRjMmNkOTcxZWI3ZmQ |
 | Organización del desarrollo (Confluence) | https://verimind.atlassian.net/wiki/external/ZjRjMzk5NzgwMWZhNDVhYzg0ODE1ZTIzN2YxNzgwNjQ |
-| Informe técnico | [COMPLETAR: enlace o ruta del documento] |
+
 
 ---
 
