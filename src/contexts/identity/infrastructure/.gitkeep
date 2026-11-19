@@ -1,0 +1,2 @@
+# Bounded Context: Identidad (Identity)
+# Capa de Infraestructura: Adaptadores de almacenamiento seguro, clientes HTTP de autenticación y tokens JWT.
