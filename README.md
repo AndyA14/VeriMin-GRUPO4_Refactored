@@ -1,296 +1,302 @@
 # VeriMind Analytics — Expo (React Native)
 
-**Integrantes del Grupo:** Andrés Aucancela, Carlos Patiño, Joseph Ponce y Petter Rodriguez
+**Universidad Central del Ecuador · Facultad de Ingeniería y Ciencias Aplicadas · Sistemas de Información**
+**Dispositivos Móviles · Grupo 4**
 
-Implementación de **16 pantallas/diseños móviles del prototipo** del archivo de Figma «Moviles» (`Wyt8RCSYYWKs4xzLd5ptPF`), frames de 393×852.
+**Integrantes:** Andrés Aucancela, Carlos Patiño, Joseph Ponce y Petter Rodriguez
+**Docente:** [COMPLETAR]
+
+Aplicación móvil (React Native + Expo) para auditar perfiles públicos de creadores de contenido, construida a partir del prototipo de Figma «Moviles» y reorganizada con **Domain-Driven Design (DDD) y arquitectura hexagonal**.
+
+## Enlaces del proyecto
+
+| Recurso | Enlace |
+|---|---|
+| Repositorio de entrega (GitHub) | https://github.com/AndyA14/VeriMin-GRUPO4_Refactored |
+| Repositorio original (versión previa a la refactorización) | https://github.com/AndyA14/VeriMind-Gmoviles |
+| Diseño en Figma («Moviles — VeriMind») | https://www.figma.com/design/Wyt8RCSYYWKs4xzLd5ptPF/Moviles?node-id=0-1&t=jTQnLaIv0eh2W7GM-1 |
+| Lenguaje ubicuo (Confluence) | https://verimind.atlassian.net/wiki/external/YmJkNDI4NjQ3NDhhNDgyMDhjMWVjODVmNWZhMmM3N2I |
+| Diseño estratégico DDD (Confluence) | https://verimind.atlassian.net/wiki/external/YzRjMmE4NDNhOGM5NDJkN2JjMDlhMjRjZDRkYmM0M2M |
+| Diseño táctico DDD (Confluence) | https://verimind.atlassian.net/wiki/external/N2ZjOTc4ZDk3ODgwNGZmYzgwMTlmNzAzYTcxMWMxMmY |
+| Arquitectura hexagonal (Confluence) | https://verimind.atlassian.net/wiki/external/ZGM2ZjdjZDBkZTgzNDhmODgwNmRjMmNkOTcxZWI3ZmQ |
+| Organización del desarrollo (Confluence) | https://verimind.atlassian.net/wiki/external/ZjRjMzk5NzgwMWZhNDVhYzg0ODE1ZTIzN2YxNzgwNjQ |
+| Informe técnico | [COMPLETAR: enlace o ruta del documento] |
 
 ---
 
-## Problema, propósito y fuente de información
+## 1. Problema, propósito y fuente de información
 
-**Problema del negocio.** Las marcas que consideran colaborar con creadores de contenido necesitan interpretar múltiples señales sobre las cuentas y sus audiencias. La información fragmentada puede dificultar una evaluación consistente y transparente antes de una colaboración.
+**Problema del negocio.** Las marcas que consideran colaborar con creadores de contenido necesitan interpretar varias señales sobre las cuentas y sus audiencias. La información fragmentada dificulta una evaluación consistente y transparente antes de una colaboración, y el número de seguidores por sí solo no refleja la actividad real de una comunidad.
 
-**Propósito.** VeriMind Analytics propone organizar indicadores de perfiles públicos de creadores (principalmente TikTok) para apoyar la revisión de sus características, audiencia y clima de comentarios. El prototipo presenta resultados orientativos; **no confirma fraude, diagnostica personalidad ni determina por sí solo la idoneidad para una campaña**.
+**Propósito.** VeriMind Analytics organiza indicadores de perfiles públicos de creadores (principalmente TikTok) para apoyar la revisión de su audiencia, su comunicación y el clima de sus comentarios. Los resultados son orientativos: **no confirman fraude, no diagnostican personalidad ni determinan por sí solos la idoneidad para una campaña**.
 
-**Fuente actual.** La información mostrada por las pantallas procede de datos de demostración definidos en `src/data/content.ts`. No se encontró un extractor de TikTok real en la versión del repositorio adjunta. La obtención real de datos, su autorización y la validación metodológica se consideran trabajos futuros.
+**Análisis contemplados**
 
-## Domain-Driven Design (DDD)
+| Dimensión | Qué busca | Precaución |
+|---|---|---|
+| Autenticidad de la audiencia | Anomalías estadísticas (Ley de Benford) y proporciones de interacción | Una desviación de Benford no demuestra bots ni fraude |
+| Perfil de comunicación (Big Five) | Rasgos orientativos del contenido | No es un diagnóstico psicológico |
+| Clima de comentarios | Señales de hostilidad o acoso | Crítica, negatividad, insulto y acoso son cosas distintas |
+| Público del creador | Edades e intereses | Depende de datos legítimos y suficientes |
 
-Se aplica **DDD como enfoque de modelado y separación de responsabilidades**. En el diseño estratégico se identifica como candidato a *Core Domain* la evaluación de perfiles de creadores. Los límites del modelo y sus reglas se documentan con el lenguaje ubicuo y los Bounded Contexts. En el diseño táctico se proponen entidades, agregados, objetos de valor y casos de uso; las propuestas **no deben confundirse con implementaciones ya integradas**.
+**Fuente de la información.** *(Actualizar este apartado cuando el scraping esté integrado.)*
+- **Hoy:** las pantallas obtienen los datos del adaptador `ExtractorMock`, que devuelve valores de demostración (los mismos de `src/data/content.ts`), sin importar el `@usuario` escrito.
+- **Objetivo del proyecto:** extraer de forma real las métricas públicas de un perfil de TikTok (seguidores, publicaciones y métricas de hasta 30 videos) mediante un servicio de extracción, y calcular la prueba de Benford sobre esas métricas. El puerto `ExtractorCuentasPort` ya existe; el adaptador real se conecta sin modificar el dominio ni las pantallas.
 
-### Lenguaje ubicuo — resumen
+---
+
+## 2. Domain-Driven Design (DDD)
+
+El proyecto aplica DDD como enfoque de modelado y de separación de responsabilidades.
+
+**Core Domain:** evaluación de perfiles de creadores para apoyar decisiones de selección comercial.
+
+### 2.1 Lenguaje ubicuo — resumen
 
 | Término | Significado compartido |
 |---|---|
 | Marca | Organización que evalúa creadores para posibles colaboraciones. |
 | Creador | Persona cuyo perfil público puede ser analizado. |
 | Cuenta de creador | Perfil de una plataforma social identificado por un handle. |
-| Handle | Identificador de la cuenta que se valida o normaliza. |
+| Handle | Identificador de la cuenta que se valida y normaliza (`@usuario`). |
 | Análisis | Ejecución que procesa datos para obtener indicadores de una cuenta. |
 | Resultado del análisis | Conjunto de indicadores y observaciones de una ejecución. |
 | Anomalía | Desviación respecto de un criterio definido; **no equivale a fraude**. |
 | Prueba de Benford | Comparación estadística exploratoria cuya aplicabilidad requiere justificación. |
-| Perfil de comunicación / Big Five | Representación orientativa de cinco dimensiones; no diagnóstico psicológico. |
-| Clima de comentarios | Señales sobre tono y contenido; la crítica negativa no equivale necesariamente a acoso. |
+| Perfil de comunicación / Big Five | Representación orientativa de cinco dimensiones; no es diagnóstico psicológico. |
+| Clima de comentarios | Señales sobre tono y contenido; la crítica negativa no equivale a acoso. |
+| Nivel de riesgo | Categoría que depende de reglas y umbrales definidos. |
 | Plan / Suscripción | Oferta de acceso y relación del usuario con sus condiciones comerciales. |
-| Nivel de riesgo | Categoría propuesta que requiere reglas, umbrales y validación. |
+| Usuario | Persona que accede a la plataforma con correo corporativo y contraseña. |
 
-**Definiciones completas, ejemplos y términos por validar:** [Lenguaje ubicuo en Confluence](https://verimind.atlassian.net/wiki/external/YmJkNDI4NjQ3NDhhNDgyMDhjMWVjODVmNWZhMmM3N2I).
+Definiciones completas y términos por validar: [Lenguaje ubicuo en Confluence](https://verimind.atlassian.net/wiki/external/YmJkNDI4NjQ3NDhhNDgyMDhjMWVjODVmNWZhMmM3N2I).
 
-### Diseño estratégico — Bounded Contexts propuestos
+### 2.2 Diseño estratégico — Bounded Contexts
 
-| Contexto | Clasificación inicial | Responsabilidad |
-|---|---|---|
-| Evaluación de Influencers | Core | Coordinar el análisis y producir indicadores. |
-| Adquisición y Normalización de Datos Públicos | Supporting | Obtener/normalizar datos y aislar formatos externos. |
-| Informes y Asistencia a la Decisión | Supporting, por validar | Presentar resultados para su interpretación. |
-| Apoyo al Creador | Supporting, por validar | Agrupar funcionalidades de apoyo, si se aprueba ese alcance. |
-| Identidad y Acceso | Generic | Gestionar usuarios y autenticación. |
-| Suscripciones y Facturación | Generic, por validar | Administrar planes, suscripciones y pagos. |
-| Notificaciones | Generic, por validar | Comunicar eventos relevantes, si requiere contexto propio. |
+| Contexto | Clasificación | Responsabilidad | Carpeta en el código |
+|---|---|---|---|
+| Evaluación de influencers | **Core** | Coordinar el análisis y producir indicadores | `src/contexts/analisis` |
+| Identidad y acceso | Generic | Usuarios y autenticación | `src/contexts/identity` |
+| Suscripciones y facturación | Generic | Planes, suscripciones y pagos | `src/contexts/facturacion` |
+| Adquisición y normalización de datos públicos | Supporting | Obtener y normalizar datos externos | Puerto `ExtractorCuentasPort` en `analisis` |
+| Informes y asistencia a la decisión | Supporting | Presentar resultados (informe, chat) | Pantallas `informe` y `chat` |
+| Apoyo al creador, Notificaciones | Supporting / Generic, por validar | Capacidades complementarias | Pantalla `apoyo` y avisos en `AppState` |
 
-En el **ZIP revisado** se observan directorios de implementación previstos para `analisis`, `identity` y `facturacion`. Los demás contextos listados son parte del **modelo de diseño** y requieren validación; no se encontraron como carpetas implementadas.
+Context Map y relaciones: [Diseño estratégico en Confluence](https://verimind.atlassian.net/wiki/external/YzRjMmE4NDNhOGM5NDJkN2JjMDlhMjRjZDRkYmM0M2M).
 
-**Context Map, responsabilidades y relaciones:** [Diseño estratégico DDD en Confluence](https://verimind.atlassian.net/wiki/external/YzRjMmE4NDNhOGM5NDJkN2JjMDlhMjRjZDRkYmM0M2M).
+### 2.3 Diseño táctico — lo que ya está implementado
 
-### Diseño táctico — conceptos y casos de uso
+| Contexto | Dominio | Aplicación | Infraestructura |
+|---|---|---|---|
+| **Análisis** | `CuentaCreador` (agregado), `Handle`, `PruebaBenford`, `NivelRiesgo`, puertos `ExtractorCuentasPort` y `RepositorioAnalisisPort` | `AnalizarCuenta`, `ObtenerResultado` | `ExtractorMock`, `RepositorioAnalisisEnMemoria` |
+| **Identidad** | `Email`, `Contrasena` (value objects), `Usuario` (entidad), puerto `RepositorioUsuarioPort` | `IniciarSesion` | `RepositorioUsuarioEnMemoria` |
+| **Facturación** | `Plan`, `Suscripcion` (previstos) | `ActivarPlan` (previsto) | Pasarela simulada (prevista) |
+| **Shared Kernel** | `Entity`, `ValueObject`, `Result`, `DomainEvent` | `CasoDeUso` | — |
 
-Los candidatos documentados incluyen `CuentaCreador`, `Handle`, `PruebaBenford`, `NivelRiesgo` y `ResultadoAnalisis` en evaluación; `Usuario`, `Email`, `Contrasena`, `IniciarSesion` y `CerrarSesion` en identidad; y `Plan`, `Suscripcion` y `ActivarPlan` en facturación. Los contratos, invariantes, errores y diagramas están ampliados en Confluence.
-
-**Estado comprobado del ZIP:** `src/contexts/analisis`, `src/contexts/identity` y `src/contexts/facturacion` contienen subdirectorios `domain`, `application` e `infrastructure` con archivos `.gitkeep`, sin clases del dominio implementadas en esta copia. Las ramas en curso pueden contener cambios posteriores no reflejados aquí.
-
-**Modelo táctico detallado:** [Diseño táctico DDD en Confluence](https://verimind.atlassian.net/wiki/external/N2ZjOTc4ZDk3ODgwNGZmYzgwMTlmNzAzYTcxMWMxMmY).
-
-## Arquitectura hexagonal — objetivo y avance real
-
-La arquitectura objetivo separa:
-
-- **Dominio:** entidades, objetos de valor, invariantes y eventos sin dependencias de interfaz.
-- **Aplicación:** casos de uso y contratos (puertos).
-- **Infraestructura:** adaptadores concretos para persistencia, proveedores y simulaciones.
-- **Presentación:** pantallas Expo Router / React Native y componentes reutilizables.
-- **Composición:** ensamblaje de las dependencias.
-
-**Avances verificados en el ZIP:** `src/shared/domain/` contiene `Entity.ts`, `ValueObject.ts`, `Result.ts` y `DomainEvent.ts`; `src/shared/application/CasoDeUso.ts` define una abstracción compartida; `src/composition/` contiene la raíz de composición inicial; se incluyen configuración de Jest (`jest.config.js`), una prueba del Shared Kernel y restricciones de importación para dominio en `eslint.config.js`. Esto demuestra **infraestructura arquitectónica inicial**, no el funcionamiento integral de los tres contextos.
-
-**Documento técnico:** [Arquitectura hexagonal en Confluence](https://verimind.atlassian.net/wiki/external/ZGM2ZjdjZDBkZTgzNDhmODgwNmRjMmNkOTcxZWI3ZmQ).
-
-## Organización del equipo y flujo Git
-
-Las responsabilidades acordadas y las ramas de trabajo son:
-
-| Integrante | Rama | Responsabilidad |
-|---|---|---|
-| Andrés Aucancela | `feat/ddd-shared-kernel` | Primitivas compartidas, composición, alias, ESLint, Jest y apoyo en integración. |
-| Carlos Patiño | `feat/ddd-context-analisis` | Contexto de análisis, objetos del dominio, casos de uso y adaptador de datos simulado. |
-| Joseph Ponce | `feat/ddd-context-identity` | Identidad, credenciales, casos de uso y repositorio en memoria. |
-| Joseph Ponce | Facturación: rama por confirmar | Planes, suscripciones y pasarela de pago simulada. |
-| Petter Rodriguez | Documentación | README, informe técnico y páginas de Confluence. |
-
-**Integración prevista:** feature branches desde `refactor/ddd-architecture`, commits por unidad de trabajo, Pull Requests hacia la rama de arquitectura y posterior integración a `main`. La actividad Git actual debe verificarse en el servidor; los archivos ZIP **no incluyen el historial de ramas, commits ni PRs**.
-
-**Responsabilidades, evidencias y flujo:** [Organización del desarrollo en Confluence](https://verimind.atlassian.net/wiki/external/ZjRjMzk5NzgwMWZhNDVhYzg0ODE1ZTIzN2YxNzgwNjQ).
-
-## Criterios de presentación y pendientes de verificación
-
-| Criterio | Estado en la copia y revisión del equipo |
-|---|---|
-| Planteamiento y origen de datos | Documentado; los datos actuales son simulados (`content.ts`). |
-| Pantallas y navegación React Native | Prototipo disponible en `src/app/`. |
-| DDD y lenguaje ubicuo | Diseñados y enlazados; implementación de contextos pendiente en esta copia. |
-| Shared Kernel, lint arquitectónico y Jest | Configuración y archivos presentes en el ZIP; no se ejecutaron las pruebas en esta revisión documental. |
-| Feature branches y PRs | Planificados; necesitan evidencia actualizada del repositorio remoto. |
-| Atomic Design en Figma | Organización y completitud pendientes de verificación directa. |
-| Relaciones 9:16, 16:9 y 1:1 | Pendiente de evidencia de adaptabilidad; Figma se describe con frames originales de 393 × 852. |
-| Extracción real, motor de IA, pagos y PDF | Actualmente simulados o no implementados en la versión inspeccionada. |
-
-**Nota metodológica:** los datos estadísticos mostrados deben interpretarse como parte del prototipo; una desviación de Benford no demuestra automáticamente bots o fraude. La visualización de Big Five tampoco constituye un diagnóstico psicológico.
+Modelo táctico detallado: [Diseño táctico en Confluence](https://verimind.atlassian.net/wiki/external/N2ZjOTc4ZDk3ODgwNGZmYzgwMTlmNzAzYTcxMWMxMmY).
 
 ---
 
-## IA utilizadas por los integrantes del Grupo
+## 3. Arquitectura hexagonal
+
+```text
+        Presentación (Expo Router / React Native)  ── adaptador de entrada
+                          │  usa
+                          ▼
+                 composition/container.ts          ── raíz de composición
+                          │  inyecta
+        ┌─────────────────┴──────────────────┐
+        │          Aplicación (casos de uso) │  ── puertos de entrada
+        │          Dominio (reglas)          │  ── núcleo
+        └─────────────────┬──────────────────┘
+                          │  define puertos de salida (interfaces)
+                          ▼
+              Infraestructura (adaptadores)    ── memoria, mock, API de extracción
+```
+
+**Regla de dependencia:** las flechas apuntan hacia adentro. El dominio no importa React, React Native, Expo ni las capas de aplicación, infraestructura o composición. Está verificada automáticamente en `eslint.config.js` (`no-restricted-imports`).
+
+### 3.1 Cómo se demuestra que se aplicó
+
+| Evidencia | Dónde verla | Estado |
+|---|---|---|
+| Estructura por contexto y capa | `src/contexts/*/{domain,application,infrastructure}` | Hecho (análisis, identidad) |
+| Regla de dependencia verificable | `eslint.config.js`; ejecutar `npx eslint src --no-cache` | Hecho |
+| Pruebas de dominio y casos de uso sin React | Archivos `__tests__`; ejecutar `npx jest` | Hecho (14 suites, 58 pruebas pasando al 19-nov-2026) |
+| Puertos con adaptadores intercambiables | `ExtractorCuentasPort` ↔ `ExtractorMock`; `RepositorioUsuarioPort` ↔ `RepositorioUsuarioEnMemoria` | Parcial: falta el segundo adaptador (extractor real) |
+| Raíz de composición | `src/composition/container.ts` | Hecho |
+| Pantallas conectadas a casos de uso | `index`, `buscar`, `resultado`, `informe`, `chat` usan `contenedor` | Hecho; `planes` y `pago` pendientes de facturación |
+| Historial de ramas y Pull Requests | Sección 4 de este README | Hecho |
+
+Documento técnico: [Arquitectura hexagonal en Confluence](https://verimind.atlassian.net/wiki/external/ZGM2ZjdjZDBkZTgzNDhmODgwNmRjMmNkOTcxZWI3ZmQ).
+
+---
+
+## 4. Organización del equipo y flujo Git
+
+### 4.1 Ramas, responsables y Pull Requests
+
+| Integrante | Rama | Qué hizo / se encarga de | Pull Request |
+|---|---|---|---|
+| Andrés Aucancela | `feat/ddd-shared-kernel` | Shared Kernel (`Entity`, `ValueObject`, `Result`, `DomainEvent`, `CasoDeUso`), contenedor, alias de TypeScript, regla de ESLint y Jest | #1 (integrado) |
+| Petter Rodriguez | `Petter` | Documentación: README y páginas de Confluence | #2 (integrado) |
+| Carlos Patiño | `feat/ddd-context-analisis` | Contexto de análisis: `Handle`, `PruebaBenford`, `NivelRiesgo`, `CuentaCreador`, puertos, casos de uso `AnalizarCuenta` y `ObtenerResultado`, adaptadores en memoria y conexión de las pantallas `buscar`, `resultado`, `informe` y `chat` | #3 (integrado) |
+| Joseph Ponce | `feat/ddd-context-identity` | Contexto de identidad: `Email`, `Contrasena`, `Usuario`, `IniciarSesion`, repositorio en memoria, registro en el contenedor y conexión del login | #4 (integrado) |
+| Joseph Ponce | `feat/ddd-context-facturacion` | Planes, suscripciones y pasarela simulada | En progreso |
+| [COMPLETAR] | [COMPLETAR] | Servicio de extracción (scraping) y cálculo real de Benford | En progreso |
+| [COMPLETAR] | [COMPLETAR] | Ajuste de la interfaz al formato 9:16 | En progreso |
+
+### 4.2 Reglas de trabajo
+
+- Cada integrante trabaja en su **feature branch** creada desde `main` actualizado.
+- **Un commit por unidad de trabajo** (por capa o por archivo funcional), con mensajes estilo *Conventional Commits* (`feat`, `fix`, `refactor`, `test`, `docs`, `chore`).
+- Antes de abrir un Pull Request se ejecuta `npx jest`, `npx eslint src --no-cache` y `npm run typecheck`.
+- Todo cambio entra a `main` mediante **Pull Request**, con título y descripción.
+
+```bash
+git checkout main && git pull origin main
+git checkout -b feat/<contexto-o-tarea>
+# ...commits pequeños...
+git push -u origin feat/<contexto-o-tarea>
+# abrir Pull Request hacia main en GitHub
+```
+
+Responsabilidades y evidencias: [Organización del desarrollo en Confluence](https://verimind.atlassian.net/wiki/external/ZjRjMzk5NzgwMWZhNDVhYzg0ODE1ZTIzN2YxNzgwNjQ).
+
+---
+
+## 5. Diseño en Figma y formatos de pantalla
+
+- **Archivo de diseño:** [Moviles — VeriMind](https://www.figma.com/design/Wyt8RCSYYWKs4xzLd5ptPF/Moviles?node-id=0-1&t=jTQnLaIv0eh2W7GM-1) — 16 pantallas móviles (frames de 393×852).
+- **Componentes:** el código organiza la interfaz en componentes reutilizables (`src/components/`), correspondientes a los átomos, moléculas y organismos del diseño.
+- **Formato de presentación: 9:16.** La aplicación se presenta en relación de aspecto 9:16 (por ejemplo 360×640 o 405×720 dp). [COMPLETAR: capturas de las pantallas en 9:16 como evidencia.]
+- **Otras proporciones (16:9 y 1:1):** [COMPLETAR según lo validado].
+
+---
+
+## 6. Estado funcional del proyecto
+
+*(Actualizar esta tabla a medida que se integren las ramas en curso.)*
+
+| Parte | Estado |
+|---|---|
+| Navegación entre las pantallas del flujo | Funciona |
+| Login: validación de correo y contraseña mediante el caso de uso `IniciarSesion` | Funciona (sin autenticación real: el usuario se registra en memoria al primer acceso) |
+| Búsqueda, resultado, informe y chat conectados al contexto de análisis | Funciona con datos de demostración (`ExtractorMock`) |
+| Extracción real de métricas de TikTok | En progreso |
+| Cálculo de la prueba de Benford desde métricas reales | En progreso (hoy usa un chi² de ejemplo) |
+| Chat con IA | No implementado: respuestas de ejemplo |
+| Informe en PDF | No implementado: muestra un aviso (*Toast*) |
+| Planes y pago | Maqueta; migración a facturación en progreso. No se procesa ningún pago real |
+| Formato 9:16 | En verificación |
+
+### Limitaciones y consideraciones éticas
+
+- Los resultados de Benford y Big Five son **orientativos**; no prueban fraude ni son un diagnóstico psicológico.
+- Solo se contemplan **cuentas públicas**.
+- La extracción automatizada de TikTok puede ir contra sus términos de uso; el uso del proyecto es **académico**.
+- Los datos de demostración no corresponden a una auditoría real.
+- Los usuarios y las suscripciones se guardan en memoria y se pierden al cerrar la app.
+
+---
+
+## 7. IA utilizadas por los integrantes del Grupo
 
 - **Andy:** Claude Sonet 5.5 y Gemini Flash 3.8
 - **Carlos:** Claude Sonet 5.5
 - **Joseph:** Claude Opus 5.5
 - **Petter:** Gemini Argon
 
----
-
-## Diseño en Figma
-
-Enlace al archivo y prototipo de Figma utilizado para el diseño y construcción de las 16 pantallas de la aplicación:
-
-- **Diseño en Figma:** [Moviles — VeriMind](https://www.figma.com/design/Wyt8RCSYYWKs4xzLd5ptPF/Moviles?node-id=0-1&t=jTQnLaIv0eh2W7GM-1)
-- **Enlace directo:** `https://www.figma.com/design/Wyt8RCSYYWKs4xzLd5ptPF/Moviles?node-id=0-1&t=jTQnLaIv0eh2W7GM-1`
+Los prompts utilizados se detallan en el informe técnico: [COMPLETAR: sección o anexo].
 
 ---
 
-## Estado del Proyecto y Arquitectura
-
-La aplicación es un prototipo interactivo funcional desarrollado con **Expo Router** y **React Native**. Integra un flujo completo de auditoría para cuentas de redes sociales (TikTok), desde un formulario de acceso con validación local hasta búsqueda de perfiles, simulación de procesamiento y visualización de indicadores (Benford, Big Five y comentarios), informes en pantalla, recursos de apoyo, chat simulado y selección de planes con pago simulado. Los datos de análisis provienen de `src/data/content.ts`.
-
-### Características Principales Implementadas
-
-- **Validación de formulario (sin autenticación real):** Validación reactiva de correo corporativo mediante expresión regular (`correoValido`) y contraseña mínima de 6 caracteres; derivación automática del nombre de usuario (`nombreDesdeCorreo`) para personalizar la experiencia.
-- **Flujo Dinámico de Usuario:** El handle ingresado en la búsqueda (`@usuario`) se normaliza y propaga globalmente a través del estado (`AppState`), reflejándose en las pantallas de Resultado y Chat.
-- **Procesamiento Animado:** Pantalla de análisis por etapas con barra de progreso animada continua (`Animated`), spinner personalizado e inspección visual simulada de publicaciones.
-- **Asistente Interactivo Simulado:** Chat local con envío de mensajes, scroll automático, nombre del usuario y respuestas predefinidas de `chatSeed`, sin conexión a un modelo de IA.
-- **Informes y Métricas Simulados:** Visualización de proporciones Big Five y rangos de edad mediante gráficos de barras apiladas (`StackedBar`), métricas de riesgo y anomalías de Benford.
-- **Módulo de Apoyo al Creador:** Selector reactivo de casos de riesgo (acoso, tensión) y panel deslizable (`BottomSheet`) con recursos y canales de ayuda.
-- **Planes y Suscripción Simulados:** Selección de planes (Free, Starter, Professional, Enterprise), pasarela simulada con métodos de pago (tarjeta/transferencia) y sistema de notificaciones flotantes (*Toast*).
-- **Control de Calidad:** Configuración estricta de TypeScript (`tsc --noEmit`) y ESLint con configuración plana para Expo (`eslint-config-expo`).
-
----
-
-## Stack y versiones instaladas
+## 8. Stack y versiones instaladas
 
 - **Expo SDK:** `~58.0.25`
 - **Expo Router:** `~58.0.31`
 - **React / React Native:** `19.3.0` / `0.88.1`
 - **TypeScript:** `~6.0.3`
+- **Pruebas:** Jest (entorno Node) con `ts-jest`
 - **Linter:** `eslint` (`^9.0.0`) + `eslint-config-expo` (`~58.0.4`)
-- **UI e Iconografía:** `lucide-react-native`, `react-native-svg`, `@expo-google-fonts/inter`
-- **Áreas Seguras y Navegación:** `react-native-safe-area-context`, `react-native-screens`
+- **UI e iconografía:** `lucide-react-native`, `react-native-svg`, `@expo-google-fonts/inter`
+- **Áreas seguras y navegación:** `react-native-safe-area-context`, `react-native-screens`
 
 ---
 
-## 1. Instalación en un entorno nuevo
-
-El proyecto cuenta con su estructura base y dependencias declaradas en `package.json`. Para instalar las dependencias en una instalación limpia o nuevo clon:
+## 9. Instalación y ejecución
 
 ```bash
-npm install
+git clone https://github.com/AndyA14/VeriMin-GRUPO4_Refactored.git
+cd VeriMin-GRUPO4_Refactored
+npm install --legacy-peer-deps
+npx expo start
 ```
 
-*(Nota: si ocurre algún conflicto de peer dependencies entre versiones de paquetes de React, ejecuta `npm install --legacy-peer-deps` o `npx expo install --fix`).*
+> Con `npm install` a secas aparece un conflicto de dependencias entre `react` y `react-dom`; por eso se usa `--legacy-peer-deps`.
 
----
+Escanea el código QR con la app **Expo Go** (teléfono y PC en la misma red). Si la red lo bloquea, usa `npx expo start --tunnel`.
 
-## 2. Configuración de Expo Router
-
-- En `package.json`: `"main": "expo-router/entry"`.
-- En `app.json`, dentro de `"expo"`:
-  - `"scheme": "verimind"`
-  - `"userInterfaceStyle": "dark"`
-  - `"plugins": ["expo-router"]`
-- Enrutamiento basado en archivos ubicado bajo el directorio `src/app/` con soporte para transiciones y layout raíz (`src/app/_layout.tsx`).
-
----
-
-## 3. Scripts de Desarrollo y Calidad
-
-Disponibles en `package.json`:
+### Scripts
 
 ```bash
-# Iniciar el servidor de desarrollo de Expo
-npm run start       # o npx expo start
-
-# Ejecución en plataformas específicas
-npm run android     # Inicia en Android / emulador
-npm run ios         # Inicia en simulador de iOS (requiere macOS)
-npm run web         # Inicia versión web
-
-# Verificación de tipos y linting
-npm run typecheck   # Ejecuta validación estricta de TypeScript (tsc --noEmit)
-npm run lint        # Valida estilo de código con ESLint
+npm run start        # servidor de desarrollo de Expo
+npm run android      # abre en Android / emulador
+npm run ios          # abre en simulador de iOS (requiere macOS)
+npm run web          # versión web
+npm run typecheck    # tsc --noEmit
+npm run lint         # ESLint con configuración de Expo
+npx eslint src --no-cache   # revisión completa, incluida la regla de arquitectura
+npx jest             # todas las pruebas (dominio, aplicación e infraestructura)
 ```
 
 ---
 
-## 4. Recursos Gráficos (`assets/images/`)
+## 10. Mapa pantalla → archivo
 
-Las imágenes del proyecto se encuentran organizadas en `assets/images/`:
+| Frame de Figma | Archivo | Descripción |
+|---|---|---|
+| Login corporativo | `src/app/index.tsx` | Valida credenciales con el caso de uso `IniciarSesion` |
+| Búsqueda y extracción | `src/app/buscar.tsx` | Normaliza el `@usuario` y ejecuta `AnalizarCuenta` |
+| Procesamiento 1/3, 2/3, 3/3 | `src/app/procesando.tsx` | Pantalla animada de avance por etapas |
+| Resultado del análisis | `src/app/resultado.tsx` | Muestra el resultado con `ObtenerResultado` |
+| Asistente | `src/app/chat.tsx` | Chat de ejemplo; usa el resultado del análisis |
+| Informe para la empresa | `src/app/informe.tsx` | Resumen, Big Five y Benford; el botón PDF solo muestra un aviso |
+| Apoyo al creador y recursos | `src/app/apoyo.tsx` | Selector de casos y panel (`BottomSheet`) |
+| Público del creador | `src/app/publico.tsx` | Edades e intereses |
+| Planes | `src/app/planes.tsx` | Selección de plan |
+| Pago | `src/app/pago.tsx` | Resumen y método de pago (simulado) |
+| Avisos (Toast) | `src/state/AppState.tsx` | Banner de confirmación |
 
-| Archivo            | Uso en la aplicación                                                     |
-|--------------------|--------------------------------------------------------------------------|
-| `login-hero.png`   | Imagen de cabecera editorial en la pantalla de inicio de sesión          |
-| `profile.png`      | Fotografía del perfil del creador analizado                              |
-| `post-1/2/3.png`   | Miniaturas ilustrativas de publicaciones en la pantalla de procesamiento |
-
-El desenfoque (`blurRadius={1.5}`) y la opacidad (`70 %`) de las miniaturas en la carga son aplicados directamente por el código.
-
----
-
-## 5. Mapa pantalla → archivo
-
-| Frame de Figma                                  | Ruta / archivo                      | Descripción y Estado |
-|-------------------------------------------------|-------------------------------------|----------------------|
-| Login corporativo                               | `src/app/index.tsx`                 | Formulario con validación de correo corporativo y contraseña (mínimo 6 caracteres), extrae el nombre del usuario |
-| Búsqueda y extracción                           | `src/app/buscar.tsx`                | Saludo personalizado (`¡Hola {userName}!`), tag de estado del plan y buscador de `@usuario` de TikTok |
-| Procesamiento 1/3, 2/3, 3/3                     | `src/app/procesando.tsx`            | Pantalla continua animada (progreso y spinner) con avance automático en 3 etapas |
-| Resultado del análisis                          | `src/app/resultado.tsx`             | Resumen dinámico del handle, métricas de riesgo y accesos a submódulos |
-| Asistente                                       | `src/app/chat.tsx`                  | Chat interactivo, burbujas con nombre de usuario, autoscroll y notificación demostrativa de reporte PDF |
-| Informe para la empresa (IA)                    | `src/app/informe.tsx`               | Resumen ejecutivo, gráfica Big Five (`StackedBar`), test de Benford y botón de reporte que muestra un Toast (sin archivo PDF real) |
-| Apoyo al creador (acoso / tono / malestar)      | `src/app/apoyo.tsx`                 | Selector de casos con chips y recomendaciones adaptadas |
-| Recursos de apoyo (panel)                       | `BottomSheet` dentro de `apoyo.tsx` | Hoja modal inferior con líneas de ayuda y recomendaciones |
-| Público del creador                             | `src/app/publico.tsx`               | Distribución por edades (`StackedBar`), tags de interés y potencial comercial |
-| Planes                                          | `src/app/planes.tsx`                | Selector de planes con confirmación inmediata del plan gratuito o pase a pasarela |
-| Pago                                            | `src/app/pago.tsx`                  | Resumen del plan, selector de método (tarjeta/transferencia) y activación en estado |
-| Avisos y notificaciones (Toast)                | `src/state/AppState.tsx`            | Banner animado superior con `BadgeCheck` para confirmar acciones clave |
-
-**Flujo de navegación:**
-`Login` → `Búsqueda` → `Procesamiento` → `Resultado` → (`Chat` · `Informe` · `Público` · `Apoyo`).
-Desde `Búsqueda`: → `Planes` → `Pago` → Retorno a `Búsqueda` con plan actualizado.
+**Flujo:** `Login` → `Búsqueda` → `Procesamiento` → `Resultado` → (`Chat` · `Informe` · `Público` · `Apoyo`). Desde `Búsqueda`: `Planes` → `Pago` → de vuelta a `Búsqueda` con el plan actualizado.
 
 ---
 
-## 6. Estructura del proyecto
+## 11. Estructura del proyecto
 
 ```text
-assets/
-  images/               Recursos gráficos (login-hero, post-1/2/3, profile) e íconos
+assets/images/            Recursos gráficos
 src/
-  app/                  Rutas y pantallas navegables (Expo Router)
-    _layout.tsx         Layout raíz con fuentes Inter, Theme Provider y StatusBar
-    index.tsx           Login corporativo con validación
-    buscar.tsx          Buscador de cuenta y centro de auditoría
-    procesando.tsx      Pantalla de carga secuencial con barra animada
-    resultado.tsx       Vista general de resultados y métricas
-    chat.tsx            Asistente conversacional interactivo
-    informe.tsx         Informe para empresas con gráficos Big Five
-    apoyo.tsx           Guía de apoyo al creador y casos de acoso
-    publico.tsx         Análisis demográfico y de audiencia
-    planes.tsx          Catálogo de planes y suscripciones
-    pago.tsx            Pasarela y confirmación de pago
-  components/           Componentes modulares reutilizables
-    ActionCard.tsx      Tarjeta interactiva de navegación
-    AlertCard.tsx       Tarjeta de advertencia y anomalías detectadas
-    BottomSheet.tsx     Panel modal deslizable inferior
-    BrandMark.tsx       Isotipo de marca VeriMind
-    Button.tsx          Botón adaptable (primario, outline, compact)
-    Card.tsx            Contenedor con bordes y tonos personalizables
-    Chip.tsx            Píldora seleccionable para filtros y métodos
-    Field.tsx           Campo de entrada de texto con icono integrado
-    IconRow.tsx         Fila informativa con icono temático
-    Logo.tsx            Identidad corporativa completa
-    NavBar.tsx          Barra de navegación superior con retroceso
-    ProfilePhoto.tsx    Avatar de usuario con marco decorativo
-    Screen.tsx          Layout contenedor base con soporte para scroll y footer fijo
-    Spinner.tsx         Indicador circular de carga estilizado
-    StackedBar.tsx      Gráfica de barras segmentadas apiladas
-    StatusTag.tsx       Etiqueta de estado por tono (info, peligro, advertencia, éxito)
-  data/
-    content.ts          Datos base del prototipo (Big Five, planes, casos de apoyo, etc.)
-  state/
-    AppState.tsx        Contexto global: plan activo, usuario logueado, handle y toast
-  theme/
-    index.ts            Tokens de diseño: paleta de colores, tipografía, espaciados y radios
-  utils/
-    formato.ts          Funciones de validación de correo, extracción de nombres y normalización de handles
-eslint.config.js        Configuración de ESLint (flat config)
-package.json            Dependencias, metadatos y scripts
-tsconfig.json           Configuración del compilador de TypeScript
-app.json                Configuración de la aplicación Expo
+  app/                    Presentación: pantallas de Expo Router
+  components/             Componentes visuales reutilizables
+  composition/            Raíz de composición (container.ts) que conecta puertos y adaptadores
+  contexts/
+    analisis/             Contexto core
+      domain/             CuentaCreador, Handle, PruebaBenford, NivelRiesgo, puertos
+      application/        AnalizarCuenta, ObtenerResultado
+      infrastructure/     ExtractorMock, RepositorioAnalisisEnMemoria
+    identity/             Contexto de identidad
+      domain/             Email, Contrasena, Usuario, RepositorioUsuarioPort
+      application/        IniciarSesion
+      infrastructure/     RepositorioUsuarioEnMemoria
+    facturacion/          Contexto de facturación (en progreso)
+  shared/                 Shared Kernel
+    domain/               Entity, ValueObject, Result, DomainEvent
+    application/          CasoDeUso
+  data/content.ts         Datos de demostración
+  state/AppState.tsx      Estado de la interfaz: plan, nombre, handle y avisos
+  theme/                  Colores, tipografía y espaciados
+  utils/formato.ts        Utilidades de formato
+eslint.config.js          ESLint, incluida la regla de dependencia hexagonal
+jest.config.js            Pruebas de dominio y aplicación
 ```
-
----
-
-## 7. Decisiones de implementación y estado del código
-
-- **Validación de Formularios:** Se incorporó validación formal en el inicio de sesión (`correoValido`), exigiendo un formato corporativo legítimo y contraseña de al menos 6 caracteres antes de permitir la entrada, con retroalimentación visual de errores mediante mensajes reactivos.
-- **Persistencia en Memoria del Flujo:** El handle de TikTok introducido en el buscador se limpia y normaliza (`normalizarUsuario`), transmitiéndose al estado global (`AppState`) para personalizar la pantalla de resultados y el chat. De igual forma, el correo del login define el nombre del auditor (`nombreDesdeCorreo`) visible en los saludos de bienvenida y en la autoría de los mensajes del chat.
-- **Simulación del Asistente (sin IA conectada):** El chat permite enviar mensajes en tiempo real, añade las intervenciones a una lista local, efectúa desplazamiento automático y responde de forma asistida (con retraso realista de 600 ms) sin requerir servicios externos de terceros ni claves de API.
-- **Reporte PDF (simulado):** Al pulsar el botón de descarga se presenta una notificación flotante (*Toast*); el código revisado no crea ni descarga un archivo PDF.
-- **Animaciones e Interacciones:** La etapa de procesamiento emplea animación fluida a través de la API `Animated` de React Native para el llenado de la barra según los pasos estipulados en el diseño.
-- **Pasarela de Pagos (simulada):** La pantalla de pagos permite alternar entre tarjeta y transferencia bancaria, reflejando el cambio de estado tanto en el chip de la pantalla de búsqueda como en el contexto global de la aplicación.
