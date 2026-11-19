@@ -51,6 +51,10 @@
  *    ```
  */
 
+import { IniciarSesion } from '../contexts/identity/application/IniciarSesion';
+import type { RepositorioUsuarioPort } from '../contexts/identity/domain';
+import { RepositorioUsuarioEnMemoria } from '../contexts/identity/infrastructure/RepositorioUsuarioEnMemoria';
+
 /**
  * Contratos de Puertos para el Bounded Context: Identidad (Identity)
  * Se reemplazarán por las interfaces reales cuando el equipo las cree en su contexto.
@@ -61,9 +65,8 @@ import { ExtractorMock } from '@contexts/analisis/infrastructure/ExtractorMock';
 import { RepositorioAnalisisEnMemoria } from '@contexts/analisis/infrastructure/RepositorioAnalisisEnMemoria';
 
 export interface ContenedorIdentidad {
-  // Ejemplo: repositorioUsuario: RepositorioUsuarioPort;
-  // Ejemplo: servicioAutenticacion: ServicioAutenticacionPort;
-  [clave: string]: unknown;
+  repositorioUsuario: RepositorioUsuarioPort;
+  iniciarSesion: IniciarSesion;
 }
 
 /**
@@ -130,9 +133,10 @@ export class ContenedorDependencias {
     // ------------------------------------------------------------------------
     // BOUNDED CONTEXT: IDENTIDAD
     // ------------------------------------------------------------------------
+    const repositorioUsuario: RepositorioUsuarioPort = new RepositorioUsuarioEnMemoria();
     const identidad: ContenedorIdentidad = {
-      // Cuando los desarrolladores implementen los puertos y adaptadores:
-      // repositorioUsuario: usarMocks ? new RepositorioUsuarioMock() : new RepositorioUsuarioApi(),
+      repositorioUsuario,
+      iniciarSesion: new IniciarSesion(repositorioUsuario),
     };
 
     // ------------------------------------------------------------------------
