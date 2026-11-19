@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 import { useRouter } from 'expo-router';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -8,9 +8,9 @@ import { Card } from '../components/Card';
 import { ProfilePhoto } from '../components/ProfilePhoto';
 import { Screen } from '../components/Screen';
 import { StatusTag } from '../components/StatusTag';
-import { account } from '../data/content';
+import { contenedor } from '../composition';
+import type { CuentaCreador } from '../contexts/analisis/domain/CuentaCreador';
 import { colors, layout, text } from '../theme';
-import { useApp } from '../state/AppState';
 
 function Metric({ value, label }: { value: string; label: string }) {
   return (
@@ -24,8 +24,21 @@ function Metric({ value, label }: { value: string; label: string }) {
 /** VeriMind · Resultado del análisis */
 export default function ResultScreen() {
   const router = useRouter();
-  const { handle } = useApp();
   const insets = useSafeAreaInsets();
+  const [cuenta, setCuenta] = useState<CuentaCreador | null>(null);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    let activo = true;
+    contenedor.analisis.obtenerResultado.ejecutar().then((resultado) => {
+      if (!activo) return;
+      if (resultado.esFallo) setError(resultado.error);
+      else setCuenta(resultado.valor);
+    });
+    return () => {
+      activo = false;
+    };
+  }, []);
 
   const overlay = (
     <>
@@ -43,6 +56,14 @@ export default function ResultScreen() {
     </>
   );
 
+  if (!cuenta) {
+    return (
+      <Screen title="RESULTADO DEL ANÁLISIS" contentStyle={styles.content}>
+        <Text style={styles.title}>{error ?? 'Cargando análisis…'}</Text>
+      </Screen>
+    );
+  }
+
   return (
     <Screen title="RESULTADO DEL ANÁLISIS" overlay={overlay} contentStyle={styles.content}>
       <Text style={styles.title}>Análisis del perfil</Text>
@@ -51,12 +72,12 @@ export default function ResultScreen() {
         <ProfilePhoto />
         <View style={styles.identity}>
           <View style={styles.nickBlock}>
-            <Text style={styles.nickname}>{handle}</Text>
-            <StatusTag tone="danger" label={account.riskLabel} />
+            <Text style={styles.nickname}>{cuenta.handle.valor}</Text>
+            <StatusTag tone="danger" label={cuenta.riesgo.etiqueta} />
           </View>
           <View style={styles.metrics}>
-            <Metric value={account.followers} label="Seguidores" />
-            <Metric value={account.posts} label="Publicaciones" />
+            <Metric value={cuenta.seguidores} label="Seguidores" />
+            <Metric value={String(cuenta.publicaciones)} label="Publicaciones" />
           </View>
         </View>
       </View>
@@ -65,11 +86,11 @@ export default function ResultScreen() {
         <AlertCard
           tone="danger"
           title="¡Anomalía detectada! Posible compra de seguidores/bots"
-          detail={`Benford: χ² = ${account.benford.chi2} (crítico: ${account.benford.critical})`}
+          detail={`Benford: χ² = ${cuenta.benford.chi2} (crítico: ${cuenta.benford.critico})`}
         />
         <AlertCard
           tone="warning"
-          title={`Comentarios hostiles: ${account.hostileComments.count} de ${account.hostileComments.total}`}
+          title={`Comentarios hostiles: ${cuenta.comentariosHostiles.cantidad} de ${cuenta.comentariosHostiles.total}`}
           detail="Posible acoso hacia el creador"
         />
       </View>
