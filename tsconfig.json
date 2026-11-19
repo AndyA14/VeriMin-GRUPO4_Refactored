@@ -1,6 +1,22 @@
 {
   "extends": "expo/tsconfig.base",
   "compilerOptions": {
-    "strict": true
+    "strict": true,
+    "baseUrl": ".",
+    "paths": {
+      "@shared/*": [
+        "src/shared/*"
+      ],
+      "@contexts/*": [
+        "src/contexts/*"
+      ],
+      "@composition/*": [
+        "src/composition/*"
+      ]
+    },
+    "types": [
+      "jest"
+    ],
+    "ignoreDeprecations": "6.0"
   }
 }
