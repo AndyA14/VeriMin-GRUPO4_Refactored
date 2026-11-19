@@ -1,19 +1,44 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import { Button } from '../components/Button';
 import { Card } from '../components/Card';
 import { Screen } from '../components/Screen';
 import { StackedBar } from '../components/StackedBar';
 import { StatusTag } from '../components/StatusTag';
-import { account, bigFive } from '../data/content';
+import { contenedor } from '../composition';
+import type { CuentaCreador } from '../contexts/analisis/domain/CuentaCreador';
+import { bigFive } from '../data/content';
 import { useApp } from '../state/AppState';
 import { colors, text } from '../theme';
 
 const pct = (n: number) => `${n.toLocaleString('es-EC', { minimumFractionDigits: 1 })} %`;
+const coma = (n: number) => String(n).replace('.', ',');
 
 /** VeriMind · Informe para la empresa (IA) */
 export default function ReportScreen() {
   const { notify } = useApp();
+  const [cuenta, setCuenta] = useState<CuentaCreador | null>(null);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    let activo = true;
+    contenedor.analisis.obtenerResultado.ejecutar().then((resultado) => {
+      if (!activo) return;
+      if (resultado.esFallo) setError(resultado.error);
+      else setCuenta(resultado.valor);
+    });
+    return () => {
+      activo = false;
+    };
+  }, []);
+
+  if (!cuenta) {
+    return (
+      <Screen title="INFORME DEL ANÁLISIS" contentStyle={styles.content}>
+        <Text style={styles.title}>{error ?? 'Cargando informe…'}</Text>
+      </Screen>
+    );
+  }
 
   return (
     <Screen title="INFORME DEL ANÁLISIS" contentStyle={styles.content}>
@@ -34,7 +59,7 @@ export default function ReportScreen() {
         <View style={styles.evidenceText}>
           <Text style={styles.evidenceTitle}>Autenticidad de la audiencia</Text>
           <Text style={styles.evidenceSub}>
-            Benford: χ² = {account.benford.chi2.replace('.', ',')} (crítico {account.benford.critical.replace('.', ',')})
+            Benford: χ² = {coma(cuenta.benford.chi2)} (crítico {coma(cuenta.benford.critico)})
           </Text>
         </View>
         <StatusTag tone="danger" label="Atípico" />
@@ -52,7 +77,7 @@ export default function ReportScreen() {
         <View style={styles.evidenceText}>
           <Text style={styles.evidenceTitle}>Clima de comentarios</Text>
           <Text style={styles.evidenceSub}>
-            {account.hostileComments.count} de {account.hostileComments.total} con tono hostil
+            {cuenta.comentariosHostiles.cantidad} de {cuenta.comentariosHostiles.total} con tono hostil
           </Text>
         </View>
         <StatusTag tone="warning" label="Revisar" />

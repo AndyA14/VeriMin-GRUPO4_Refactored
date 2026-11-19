@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { KeyboardAvoidingView, Platform, Pressable, ScrollView, StyleSheet, Text, TextInput, View } from 'react-native';
 import { useRouter } from 'expo-router';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -7,7 +7,9 @@ import { BrandMark } from '../components/BrandMark';
 import { Button } from '../components/Button';
 import { NavBar } from '../components/NavBar';
 import { ProfilePhoto } from '../components/ProfilePhoto';
-import { account, chatSeed } from '../data/content';
+import { contenedor } from '../composition';
+import type { CuentaCreador } from '../contexts/analisis/domain/CuentaCreador';
+import { chatSeed } from '../data/content';
 import { useApp } from '../state/AppState';
 import { colors, layout, radius, text } from '../theme';
 
@@ -26,10 +28,21 @@ const initialMessages: Message[] = [
 export default function ChatScreen() {
   const router = useRouter();
   const insets = useSafeAreaInsets();
-  const { notify, userName, handle } = useApp();
+  const { notify, userName } = useApp();
+  const [cuenta, setCuenta] = useState<CuentaCreador | null>(null);
   const [messages, setMessages] = useState<Message[]>(initialMessages);
   const [draft, setDraft] = useState('');
   const scroller = useRef<React.ComponentRef<typeof ScrollView>>(null);
+
+  useEffect(() => {
+    let activo = true;
+    contenedor.analisis.obtenerResultado.ejecutar().then((resultado) => {
+      if (activo && resultado.esExitoso) setCuenta(resultado.valor);
+    });
+    return () => {
+      activo = false;
+    };
+  }, []);
 
   const send = () => {
     const body = draft.trim();
@@ -49,11 +62,13 @@ export default function ChatScreen() {
         <View style={styles.summary}>
           <ProfilePhoto />
           <View style={styles.identity}>
-            <Text style={styles.nickname}>{handle}</Text>
-            <Text style={styles.metrics}>{account.followers} seguidores  ·  {account.posts} publicaciones</Text>
+            <Text style={styles.nickname}>{cuenta ? cuenta.handle.valor : ''}</Text>
+            <Text style={styles.metrics}>
+              {cuenta ? `${cuenta.seguidores} seguidores  ·  ${cuenta.publicaciones} publicaciones` : ''}
+            </Text>
             <View style={styles.risk}>
               <View style={styles.riskBar} />
-              <Text style={styles.riskText}>{account.riskLabel}</Text>
+              <Text style={styles.riskText}>{cuenta ? cuenta.riesgo.etiqueta : ''}</Text>
             </View>
           </View>
         </View>

@@ -6,21 +6,32 @@ import { IconRow } from '../components/IconRow';
 import { Logo } from '../components/Logo';
 import { Screen } from '../components/Screen';
 import { StatusTag } from '../components/StatusTag';
+import { contenedor } from '../composition';
 import { analysisItems, plans } from '../data/content';
 import { useApp } from '../state/AppState';
 import { colors, radius, text } from '../theme';
-import { normalizarUsuario } from '../utils/formato';
 
 /** VeriMind · Búsqueda y extracción */
 export default function SearchScreen() {
   const router = useRouter();
   const { plan, userName, setHandle: guardarUsuario } = useApp();
   const [handle, setHandle] = useState('');
+  const [error, setError] = useState<string | null>(null);
+  const [analizando, setAnalizando] = useState(false);
 
   const planName = plans.find((p) => p.id === plan)?.name;
 
-    const analyze = () => {
-    guardarUsuario(normalizarUsuario(handle));
+  const analyze = async () => {
+    if (analizando) return;
+    setError(null);
+    setAnalizando(true);
+    const resultado = await contenedor.analisis.analizarCuenta.ejecutar({ usuario: handle });
+    setAnalizando(false);
+    if (resultado.esFallo) {
+      setError(resultado.error);
+      return;
+    }
+    guardarUsuario(resultado.valor.handle.valor);
     router.push('/procesando');
   };
 
@@ -59,6 +70,7 @@ export default function SearchScreen() {
         </View>
         <Button variant="compact" label="Analizar" onPress={analyze} />
       </View>
+      {error ? <Text style={styles.error}>{error}</Text> : null}
 
       <View style={[styles.list, { marginTop: 33 }]}>
         <Text style={styles.listTitle}>Qué analizaremos</Text>
@@ -91,4 +103,5 @@ const styles = StyleSheet.create({
   list: { gap: 8 },
   listTitle: { ...text.label13, color: colors.text },
   disclaimer: { ...text.caption10, color: colors.textMuted },
+  error: { ...text.caption10, color: colors.dangerText, marginTop: 8 },
 });

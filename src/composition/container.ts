@@ -55,6 +55,11 @@
  * Contratos de Puertos para el Bounded Context: Identidad (Identity)
  * Se reemplazarán por las interfaces reales cuando el equipo las cree en su contexto.
  */
+import { AnalizarCuenta } from '@contexts/analisis/application/AnalizarCuenta';
+import { ObtenerResultado } from '@contexts/analisis/application/ObtenerResultado';
+import { ExtractorMock } from '@contexts/analisis/infrastructure/ExtractorMock';
+import { RepositorioAnalisisEnMemoria } from '@contexts/analisis/infrastructure/RepositorioAnalisisEnMemoria';
+
 export interface ContenedorIdentidad {
   // Ejemplo: repositorioUsuario: RepositorioUsuarioPort;
   // Ejemplo: servicioAutenticacion: ServicioAutenticacionPort;
@@ -65,9 +70,8 @@ export interface ContenedorIdentidad {
  * Contratos de Puertos para el Bounded Context: Análisis
  */
 export interface ContenedorAnalisis {
-  // Ejemplo: repositorioAnalisis: RepositorioAnalisisPort;
-  // Ejemplo: servicioMotorIA: ServicioMotorIAPort;
-  [clave: string]: unknown;
+  analizarCuenta: AnalizarCuenta;
+  obtenerResultado: ObtenerResultado;
 }
 
 /**
@@ -134,8 +138,11 @@ export class ContenedorDependencias {
     // ------------------------------------------------------------------------
     // BOUNDED CONTEXT: ANÁLISIS
     // ------------------------------------------------------------------------
+    const repositorioAnalisis = new RepositorioAnalisisEnMemoria();
+    const extractorCuentas = new ExtractorMock();
     const analisis: ContenedorAnalisis = {
-      // repositorioAnalisis: usarMocks ? new RepositorioAnalisisEnMemoria() : new RepositorioAnalisisApi(),
+      analizarCuenta: new AnalizarCuenta(extractorCuentas, repositorioAnalisis),
+      obtenerResultado: new ObtenerResultado(repositorioAnalisis),
     };
 
     // ------------------------------------------------------------------------
