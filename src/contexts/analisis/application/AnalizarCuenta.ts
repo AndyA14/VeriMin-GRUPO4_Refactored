@@ -10,9 +10,6 @@ export interface AnalizarCuentaEntrada {
   usuario: string;
 }
 
-/** Usuario de ejemplo que la app usa cuando el campo se deja vacío. */
-export const HANDLE_POR_DEFECTO = '@carlospati';
-
 export class AnalizarCuenta implements CasoDeUso<AnalizarCuentaEntrada, CuentaCreador> {
   constructor(
     private readonly extractor: ExtractorCuentasPort,
@@ -20,9 +17,7 @@ export class AnalizarCuenta implements CasoDeUso<AnalizarCuentaEntrada, CuentaCr
   ) {}
 
   public async ejecutar(entrada: AnalizarCuentaEntrada): Promise<Result<CuentaCreador>> {
-    const texto = entrada.usuario?.trim() ? entrada.usuario : HANDLE_POR_DEFECTO;
-
-    const handle = Handle.crear(texto);
+    const handle = Handle.crear(entrada.usuario);
     if (handle.esFallo) {
       return Result.fail(handle.error);
     }

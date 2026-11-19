@@ -47,13 +47,19 @@ describe('AnalizarCuenta (caso de uso)', () => {
     expect(repo.guardada?.handle.valor).toBe('@maria');
   });
 
-  it('usa @carlospati cuando el campo está vacío', async () => {
+  it('rechaza el campo vacío o solo con arrobas y no consulta al extractor', async () => {
     const extractor = new ExtractorFalso();
     const repo = new RepositorioFalso();
-    const resultado = await new AnalizarCuenta(extractor, repo).ejecutar({ usuario: '   ' });
+    const caso = new AnalizarCuenta(extractor, repo);
 
-    expect(resultado.esExitoso).toBe(true);
-    expect(extractor.handlesPedidos).toEqual(['@carlospati']);
+    const vacio = await caso.ejecutar({ usuario: '   ' });
+    const soloArrobas = await caso.ejecutar({ usuario: '@@' });
+
+    expect(vacio.esFallo).toBe(true);
+    expect(vacio.error).toBe('Ingresa un @usuario público de TikTok.');
+    expect(soloArrobas.esFallo).toBe(true);
+    expect(extractor.handlesPedidos).toEqual([]);
+    expect(repo.guardada).toBeNull();
   });
 
   it('falla con un mensaje claro cuando el extractor lanza un error y no guarda nada', async () => {
