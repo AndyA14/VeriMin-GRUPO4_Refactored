@@ -39,9 +39,7 @@ Aplicación móvil (React Native + Expo) para auditar perfiles públicos de crea
 | Clima de comentarios | Señales de hostilidad o acoso | Crítica, negatividad, insulto y acoso son cosas distintas |
 | Público del creador | Edades e intereses | Depende de datos legítimos y suficientes |
 
-**Fuente de la información.** *(Actualizar este apartado cuando el scraping esté integrado.)*
-- **Hoy:** las pantallas obtienen los datos del adaptador `ExtractorMock`, que devuelve valores de demostración (los mismos de `src/data/content.ts`), sin importar el `@usuario` escrito.
-- **Objetivo del proyecto:** extraer de forma real las métricas públicas de un perfil de TikTok (seguidores, publicaciones y métricas de hasta 30 videos) mediante un servicio de extracción, y calcular la prueba de Benford sobre esas métricas. El puerto `ExtractorCuentasPort` ya existe; el adaptador real se conecta sin modificar el dominio ni las pantallas.
+**Fuente de la información.** Esta entrega trabaja con **datos de demostración** definidos en el adaptador `ExtractorMock` (los mismos de `src/data/content.ts`), sin importar el `@usuario` escrito. La extracción real desde TikTok queda como trabajo futuro: el puerto `ExtractorCuentasPort` permite conectarla con un nuevo adaptador sin modificar el dominio ni las pantallas. La regla estadística de Benford ya está implementada en el dominio (`PruebaBenford.desdeMetricas`) y lista para recibir métricas reales.
 
 ---
 
@@ -90,7 +88,7 @@ Context Map y relaciones: [Diseño estratégico en Confluence](https://verimind.
 |---|---|---|---|
 | **Análisis** | `CuentaCreador` (agregado), `Handle`, `PruebaBenford`, `NivelRiesgo`, puertos `ExtractorCuentasPort` y `RepositorioAnalisisPort` | `AnalizarCuenta`, `ObtenerResultado` | `ExtractorMock`, `RepositorioAnalisisEnMemoria` |
 | **Identidad** | `Email`, `Contrasena` (value objects), `Usuario` (entidad), puerto `RepositorioUsuarioPort` | `IniciarSesion` | `RepositorioUsuarioEnMemoria` |
-| **Facturación** | `Plan`, `Suscripcion` (previstos) | `ActivarPlan` (previsto) | Pasarela simulada (prevista) |
+| **Facturación** | `Plan`, `Suscripcion` (previstos, no implementados) | `ActivarPlan` (previsto) | Pasarela simulada (prevista) |
 | **Shared Kernel** | `Entity`, `ValueObject`, `Result`, `DomainEvent` | `CasoDeUso` | — |
 
 Modelo táctico detallado: [Diseño táctico en Confluence](https://verimind.atlassian.net/wiki/external/N2ZjOTc4ZDk3ODgwNGZmYzgwMTlmNzAzYTcxMWMxMmY).
@@ -111,7 +109,7 @@ Modelo táctico detallado: [Diseño táctico en Confluence](https://verimind.atl
         └─────────────────┬──────────────────┘
                           │  define puertos de salida (interfaces)
                           ▼
-              Infraestructura (adaptadores)    ── memoria, mock, API de extracción
+              Infraestructura (adaptadores)    ── memoria y mock (un extractor real sería otro adaptador)
 ```
 
 **Regla de dependencia:** las flechas apuntan hacia adentro. El dominio no importa React, React Native, Expo ni las capas de aplicación, infraestructura o composición. Está verificada automáticamente en `eslint.config.js` (`no-restricted-imports`).
@@ -122,10 +120,10 @@ Modelo táctico detallado: [Diseño táctico en Confluence](https://verimind.atl
 |---|---|---|
 | Estructura por contexto y capa | `src/contexts/*/{domain,application,infrastructure}` | Hecho (análisis, identidad) |
 | Regla de dependencia verificable | `eslint.config.js`; ejecutar `npx eslint src --no-cache` | Hecho |
-| Pruebas de dominio y casos de uso sin React | Archivos `__tests__`; ejecutar `npx jest` | Hecho (14 suites, 58 pruebas pasando al 19-nov-2026) |
-| Puertos con adaptadores intercambiables | `ExtractorCuentasPort` ↔ `ExtractorMock`; `RepositorioUsuarioPort` ↔ `RepositorioUsuarioEnMemoria` | Parcial: falta el segundo adaptador (extractor real) |
+| Pruebas de dominio y casos de uso sin React | Archivos `__tests__`; ejecutar `npx jest` | Hecho (15 suites, 63 pruebas pasando al 19-nov-2026) |
+| Puertos con adaptadores intercambiables | `ExtractorCuentasPort` ↔ `ExtractorMock`; `RepositorioUsuarioPort` ↔ `RepositorioUsuarioEnMemoria` | Cada puerto tiene su adaptador de prueba; un extractor real queda como trabajo futuro |
 | Raíz de composición | `src/composition/container.ts` | Hecho |
-| Pantallas conectadas a casos de uso | `index`, `buscar`, `resultado`, `informe`, `chat` usan `contenedor` | Hecho; `planes` y `pago` pendientes de facturación |
+| Pantallas conectadas a casos de uso | `index`, `buscar`, `resultado`, `informe`, `chat` usan `contenedor` | Hecho; `planes` y `pago` siguen con datos locales (facturación no incluida en esta entrega) |
 | Historial de ramas y Pull Requests | Sección 4 de este README | Hecho |
 
 Documento técnico: [Arquitectura hexagonal en Confluence](https://verimind.atlassian.net/wiki/external/ZGM2ZjdjZDBkZTgzNDhmODgwNmRjMmNkOTcxZWI3ZmQ).
@@ -142,9 +140,11 @@ Documento técnico: [Arquitectura hexagonal en Confluence](https://verimind.atla
 | Petter Rodriguez | `Petter` | Documentación: README y páginas de Confluence | #2 (integrado) |
 | Carlos Patiño | `feat/ddd-context-analisis` | Contexto de análisis: `Handle`, `PruebaBenford`, `NivelRiesgo`, `CuentaCreador`, puertos, casos de uso `AnalizarCuenta` y `ObtenerResultado`, adaptadores en memoria y conexión de las pantallas `buscar`, `resultado`, `informe` y `chat` | #3 (integrado) |
 | Joseph Ponce | `feat/ddd-context-identity` | Contexto de identidad: `Email`, `Contrasena`, `Usuario`, `IniciarSesion`, repositorio en memoria, registro en el contenedor y conexión del login | #4 (integrado) |
-| Joseph Ponce | `feat/ddd-context-facturacion` | Planes, suscripciones y pasarela simulada | En progreso |
-| [COMPLETAR] | [COMPLETAR] | Servicio de extracción (scraping) y cálculo real de Benford | En progreso |
+| Joseph Ponce | `docs/readme-completo` | README completo: DDD, hexagonal, equipo, enlaces y estado real | #5 (integrado) |
+| Joseph Ponce | `feat/benford-desde-metricas`, `fix/restaurar-benford` | `PruebaBenford.desdeMetricas`: cálculo de χ² desde métricas, con pruebas | Integrado |
 | [COMPLETAR] | [COMPLETAR] | Ajuste de la interfaz al formato 9:16 | En progreso |
+
+Facturación (`Plan`, `Suscripcion`, `ActivarPlan`) está diseñada pero no forma parte de esta entrega.
 
 ### 4.2 Reglas de trabajo
 
@@ -176,18 +176,16 @@ Responsabilidades y evidencias: [Organización del desarrollo en Confluence](htt
 
 ## 6. Estado funcional del proyecto
 
-*(Actualizar esta tabla a medida que se integren las ramas en curso.)*
-
 | Parte | Estado |
 |---|---|
 | Navegación entre las pantallas del flujo | Funciona |
 | Login: validación de correo y contraseña mediante el caso de uso `IniciarSesion` | Funciona (sin autenticación real: el usuario se registra en memoria al primer acceso) |
 | Búsqueda, resultado, informe y chat conectados al contexto de análisis | Funciona con datos de demostración (`ExtractorMock`) |
-| Extracción real de métricas de TikTok | En progreso |
-| Cálculo de la prueba de Benford desde métricas reales | En progreso (hoy usa un chi² de ejemplo) |
+| Extracción real de métricas de TikTok | Fuera del alcance de esta entrega (datos de demostración) |
+| Cálculo de la prueba de Benford | Implementado en el dominio (`PruebaBenford.desdeMetricas`, con pruebas); las pantallas muestran hoy el valor de demostración |
 | Chat con IA | No implementado: respuestas de ejemplo |
 | Informe en PDF | No implementado: muestra un aviso (*Toast*) |
-| Planes y pago | Maqueta; migración a facturación en progreso. No se procesa ningún pago real |
+| Planes y pago | Maqueta con datos locales; no se procesa ningún pago real |
 | Formato 9:16 | En verificación |
 
 ### Limitaciones y consideraciones éticas
@@ -289,7 +287,7 @@ src/
       domain/             Email, Contrasena, Usuario, RepositorioUsuarioPort
       application/        IniciarSesion
       infrastructure/     RepositorioUsuarioEnMemoria
-    facturacion/          Contexto de facturación (en progreso)
+    facturacion/          Contexto de facturación (previsto, sin implementar)
   shared/                 Shared Kernel
     domain/               Entity, ValueObject, Result, DomainEvent
     application/          CasoDeUso
