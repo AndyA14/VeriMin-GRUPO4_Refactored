@@ -7,7 +7,7 @@ import { Field } from '../components/Field';
 import { Logo } from '../components/Logo';
 import { Screen } from '../components/Screen';
 import { useApp } from '../state/AppState';
-import { correoValido, nombreDesdeCorreo } from '../utils/formato';
+import { contenedor } from '../composition';
 import { colors, fonts, radius, text } from '../theme';
 
 /** VeriMind · Login corporativo */
@@ -18,11 +18,11 @@ export default function LoginScreen() {
   const [password, setPassword] = useState('');
   const [error, setError] = useState<string | null>(null);
 
-  const iniciarSesion = () => {
-    if (!correoValido(email)) return setError('Ingresa un correo corporativo válido.');
-    if (password.length < 6) return setError('La contraseña debe tener al menos 6 caracteres.');
+  const iniciarSesion = async () => {
+    const resultado = await contenedor.identidad.iniciarSesion.ejecutar({ email, clave: password });
+    if (resultado.esFallo) return setError(resultado.error);
     setError(null);
-    setUserName(nombreDesdeCorreo(email));
+    setUserName(resultado.valor.nombre);
     router.replace('/buscar');
   };
 
