@@ -9,9 +9,20 @@ import { account, bigFive } from '../data/content';
 import { useApp } from '../state/AppState';
 import { colors, text } from '../theme';
 
+/**
+ * Formatea un número como porcentaje con un decimal localizado para Ecuador/España.
+ *
+ * @param n - Valor numérico porcentual.
+ * @returns Cadena con formato "20,6 %".
+ */
 const pct = (n: number) => `${n.toLocaleString('es-EC', { minimumFractionDigits: 1 })} %`;
 
-/** VeriMind · Informe para la empresa (IA) */
+/**
+ * Pantalla de Informe Corporativo Generado con IA.
+ * Presenta una recomendación ejecutiva para contratación de creadores,
+ * desglose de evidencia estadística (Ley de Benford, modelo Big Five y toxicidad)
+ * y acción de exportación a documento PDF.
+ */
 export default function ReportScreen() {
   const { notify } = useApp();
 

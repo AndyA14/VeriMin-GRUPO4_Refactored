@@ -5,28 +5,53 @@ import { BadgeCheck } from 'lucide-react-native';
 import type { PlanId } from '../data/content';
 import { colors, layout, radius, text, tones } from '../theme';
 
+/**
+ * Estado global de la aplicación VeriMind.
+ * Administra el plan activo, datos de sesión del usuario (nombre y cuenta analizada)
+ * y un sistema de notificaciones temporales tipo Toast accesibles.
+ */
+
 export type CurrentPlan = 'trial' | PlanId;
 
+/** Estructura del estado y acciones expuestas por el contexto global */
 interface AppState {
+  /** Plan actual seleccionado ('trial' o planes de pago) */
   plan: CurrentPlan;
+  /** Actualiza el plan activo */
   setPlan: (plan: CurrentPlan) => void;
-  /** Muestra un aviso de confirmación en la parte superior. */
+  /**
+   * Muestra un aviso de confirmación accesible (Toast) en la parte superior.
+   * Se oculta automáticamente tras 2.6 segundos.
+   *
+   * @param message - Texto explicativo del aviso a mostrar.
+   */
   notify: (message: string) => void;
+  /** Nombre del usuario en sesión */
   userName: string;
+  /** Modifica el nombre del usuario */
   setUserName: (name: string) => void;
+  /** Handle o usuario público analizado (ej: '@carlospati') */
   handle: string;
+  /** Modifica el handle auditado */
   setHandle: (handle: string) => void;
 }
 
 const AppContext = createContext<AppState | null>(null);
 
-
+/**
+ * Hook personalizado para acceder de forma segura al contexto de VeriMind.
+ * Lanza un error si se invoca fuera de un `<AppProvider>`.
+ */
 export function useApp(): AppState {
   const ctx = useContext(AppContext);
   if (!ctx) throw new Error('useApp debe usarse dentro de <AppProvider>');
   return ctx;
 }
 
+/**
+ * Proveedor de estado global que envuelve la jerarquía de navegación.
+ * Renderiza además el Toast animado para avisos globales del sistema.
+ */
 export function AppProvider({ children }: { children: React.ReactNode }) {
   const [plan, setPlan] = useState<CurrentPlan>('trial');
   const [userName, setUserName] = useState('Carlos');
@@ -36,6 +61,7 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
   const [opacity] = useState(() => new Animated.Value(0));
   const timer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
+  /** Dispara una notificación animada con desvanecimiento */
   const notify = useCallback(
     (next: string) => {
       if (timer.current) clearTimeout(timer.current);
@@ -48,6 +74,7 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
     [opacity],
   );
 
+  // Limpieza del temporizador para evitar fugas de memoria al desmontar
   useEffect(() => () => { if (timer.current) clearTimeout(timer.current); }, []);
 
   const value = useMemo(

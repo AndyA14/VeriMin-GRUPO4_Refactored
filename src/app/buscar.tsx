@@ -11,7 +11,15 @@ import { useApp } from '../state/AppState';
 import { colors, radius, text } from '../theme';
 import { normalizarUsuario } from '../utils/formato';
 
-/** VeriMind · Búsqueda y extracción */
+/**
+ * Pantalla Principal de Búsqueda y Auditoría de VeriMind.
+ * Permite ingresar cualquier nombre de usuario público de redes (TikTok)
+ * e iniciar el escaneo heurístico de autenticidad y toxicidad.
+ *
+ * Adaptabilidad responsive:
+ * - Reemplazo de márgenes fijos rígidos (anteriores 113px) por espaciados relativos elásticos (`gap` y márgenes moderados),
+ *   asegurando que en relaciones 1:1 (plegables/split-screen) y 18:9 (landscape) el formulario sea visible de inmediato.
+ */
 export default function SearchScreen() {
   const router = useRouter();
   const { plan, userName, setHandle: guardarUsuario } = useApp();
@@ -19,7 +27,8 @@ export default function SearchScreen() {
 
   const planName = plans.find((p) => p.id === plan)?.name;
 
-    const analyze = () => {
+  /** Normaliza el usuario ingresado e inicia la secuencia de análisis */
+  const analyze = () => {
     guardarUsuario(normalizarUsuario(handle));
     router.push('/procesando');
   };
@@ -38,29 +47,33 @@ export default function SearchScreen() {
         )}
       </View>
 
-      <Text style={[styles.greeting, { marginTop: 49 }]}>¡Hola {userName}!</Text>
-      <Text style={[styles.lead, { marginTop: 49 }]}>Bienvenido al centro de auditoría</Text>
-
-      <View style={[styles.searchRow, { marginTop: 113 }]}>
-        <View style={styles.searchField}>
-          <TextInput
-            value={handle}
-            onChangeText={setHandle}
-            placeholder="Ingresar @usuario público de TikTok..."
-            placeholderTextColor={colors.textMuted}
-            selectionColor={colors.blue}
-            autoCapitalize="none"
-            autoCorrect={false}
-            returnKeyType="search"
-            onSubmitEditing={analyze}
-            style={styles.searchInput}
-            accessibilityLabel="Usuario público de TikTok"
-          />
-        </View>
-        <Button variant="compact" label="Analizar" onPress={analyze} />
+      <View style={styles.headerBlock}>
+        <Text style={styles.greeting}>¡Hola {userName}!</Text>
+        <Text style={styles.lead}>Bienvenido al centro de auditoría</Text>
       </View>
 
-      <View style={[styles.list, { marginTop: 33 }]}>
+      <View style={styles.searchSection}>
+        <View style={styles.searchRow}>
+          <View style={styles.searchField}>
+            <TextInput
+              value={handle}
+              onChangeText={setHandle}
+              placeholder="Ingresar @usuario público de TikTok..."
+              placeholderTextColor={colors.textMuted}
+              selectionColor={colors.blue}
+              autoCapitalize="none"
+              autoCorrect={false}
+              returnKeyType="search"
+              onSubmitEditing={analyze}
+              style={styles.searchInput}
+              accessibilityLabel="Usuario público de TikTok"
+            />
+          </View>
+          <Button variant="compact" label="Analizar" onPress={analyze} />
+        </View>
+      </View>
+
+      <View style={styles.list}>
         <Text style={styles.listTitle}>Qué analizaremos</Text>
         {analysisItems.map((item) => (
           <IconRow key={item.id} icon={item.icon} title={item.title} description={item.description} />
@@ -72,10 +85,12 @@ export default function SearchScreen() {
 }
 
 const styles = StyleSheet.create({
-  content: { paddingTop: 23 },
+  content: { paddingTop: 20, gap: 28 },
   topRow: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'flex-start', gap: 8 },
+  headerBlock: { gap: 12 },
   greeting: { ...text.greeting, color: colors.text },
   lead: { ...text.lead16, color: colors.textMuted },
+  searchSection: { gap: 10 },
   searchRow: { flexDirection: 'row', gap: 8 },
   searchField: {
     flex: 1,
@@ -88,7 +103,8 @@ const styles = StyleSheet.create({
     borderRadius: radius.md,
   },
   searchInput: { ...text.body13, color: colors.text, paddingVertical: 0 },
-  list: { gap: 8 },
+  list: { gap: 8, paddingBottom: 16 },
   listTitle: { ...text.label13, color: colors.text },
   disclaimer: { ...text.caption10, color: colors.textMuted },
 });
+

@@ -4,6 +4,11 @@ import { useRouter } from 'expo-router';
 import { ArrowLeft } from 'lucide-react-native';
 import { colors, layout, text } from '../theme';
 
+/**
+ * Barra superior de navegación con botón de retroceso accesible y título de la sección activa.
+ *
+ * @param props.title - Título o categoría de la vista actual.
+ */
 export function NavBar({ title }: { title: string }) {
   const router = useRouter();
 

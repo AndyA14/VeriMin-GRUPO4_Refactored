@@ -3,11 +3,17 @@ import { StyleSheet, TextInput, TextInputProps, View } from 'react-native';
 import type { LucideIcon } from 'lucide-react-native';
 import { colors, radius, text } from '../theme';
 
+/**
+ * Propiedades del componente Field.
+ */
 interface Props extends TextInputProps {
+  /** Componente de ícono vectorial mostrado en el extremo izquierdo del campo */
   icon: LucideIcon;
 }
 
-/** Campo de texto con ícono (Campo / Correo, Contraseña, Titular, Tarjeta). */
+/**
+ * Campo de entrada de texto estilizado con ícono integrado, bordes corporativos y placeholder contrastado.
+ */
 export function Field({ icon: Icon, style, ...inputProps }: Props) {
   return (
     <View style={styles.field}>

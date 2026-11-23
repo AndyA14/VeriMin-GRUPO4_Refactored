@@ -9,13 +9,18 @@ import { PlanId, plans } from '../data/content';
 import { useApp } from '../state/AppState';
 import { colors, text } from '../theme';
 
-/** VeriMind · Planes */
+/**
+ * Pantalla de Selección de Planes Comerciales de VeriMind.
+ * Permite seleccionar entre los planes Gratis, Esencial, Profesional y Agencia,
+ * actualizando el estado de suscripción del usuario o redirigiendo a la pasarela de pago.
+ */
 export default function PlansScreen() {
   const router = useRouter();
   const { setPlan, notify } = useApp();
   const [selectedId, setSelectedId] = useState<PlanId>('professional');
   const selected = plans.find((p) => p.id === selectedId) ?? plans[2];
 
+  /** Aplica el plan gratuito directamente o avanza a la pantalla de pago para planes premium */
   const confirm = () => {
     if (selected.id === 'free') {
       setPlan('free');

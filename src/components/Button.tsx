@@ -2,18 +2,35 @@ import React from 'react';
 import { Pressable, StyleProp, StyleSheet, Text, ViewStyle } from 'react-native';
 import { colors, radius, text } from '../theme';
 
+/**
+ * Variantes visuales para botones de acción.
+ * - `primary`: Botón ancho con fondo azul institucional.
+ * - `compact`: Botón de ancho reducido para barras de búsqueda inline.
+ * - `outline`: Botón secundario con borde y fondo atenuado.
+ */
 type Variant = 'primary' | 'compact' | 'outline';
 
+/**
+ * Propiedades del componente Button.
+ */
 interface Props {
+  /** Texto legible mostrado en el botón */
   label: string;
+  /** Función disparada al pulsar el botón */
   onPress: () => void;
+  /** Estilo visual del botón */
   variant?: Variant;
-  /** Algunos botones del prototipo usan SemiBold en lugar de Bold. */
+  /** Activa tipografía seminegrita en lugar de negrita estándar */
   semiBold?: boolean;
+  /** Estilos complementarios para el contenedor del botón */
   style?: StyleProp<ViewStyle>;
+  /** Pista de accesibilidad para lectores de pantalla */
   accessibilityHint?: string;
 }
 
+/**
+ * Botón interactivo táctil con retroalimentación de opacidad, soporte de variantes y accesibilidad.
+ */
 export function Button({ label, onPress, variant = 'primary', semiBold, style, accessibilityHint }: Props) {
   const labelStyle =
     variant === 'outline' ? styles.outlineLabel : variant === 'compact' ? styles.compactLabel : semiBold ? styles.semiLabel : styles.boldLabel;

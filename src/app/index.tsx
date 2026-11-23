@@ -1,5 +1,13 @@
 import React, { useState } from 'react';
-import { ImageBackground, KeyboardAvoidingView, Platform, StyleSheet, Text, View } from 'react-native';
+import {
+  ImageBackground,
+  KeyboardAvoidingView,
+  Platform,
+  StyleSheet,
+  Text,
+  useWindowDimensions,
+  View,
+} from 'react-native';
 import { useRouter } from 'expo-router';
 import { LockKeyhole, Mail, ShieldCheck } from 'lucide-react-native';
 import { Button } from '../components/Button';
@@ -10,14 +18,26 @@ import { useApp } from '../state/AppState';
 import { correoValido, nombreDesdeCorreo } from '../utils/formato';
 import { colors, fonts, radius, text } from '../theme';
 
-/** VeriMind · Login corporativo */
+/**
+ * Pantalla de Inicio de Sesión Corporativo de VeriMind.
+ * Valida credenciales empresariales y extrae el nombre del usuario para personalizar la sesión.
+ *
+ * Adaptabilidad responsive:
+ * - Adapta la altura del hero editorial (`hero`) en pantallas con baja altura (landscape 18:9 o 1:1 compacto)
+ *   para mantener los campos y el botón de acción visibles de inmediato.
+ * - Integración con `KeyboardAvoidingView` para evitar ocultamiento de campos bajo el teclado en iOS/Android.
+ */
 export default function LoginScreen() {
   const router = useRouter();
+  const { height } = useWindowDimensions();
   const { setUserName } = useApp();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState<string | null>(null);
 
+  const isCompact = height < 600;
+
+  /** Valida el correo y longitud mínima de contraseña antes de ingresar */
   const iniciarSesion = () => {
     if (!correoValido(email)) return setError('Ingresa un correo corporativo válido.');
     if (password.length < 6) return setError('La contraseña debe tener al menos 6 caracteres.');
@@ -43,7 +63,7 @@ export default function LoginScreen() {
 
         <ImageBackground
           source={require('../../assets/images/login-hero.png')}
-          style={styles.hero}
+          style={[styles.hero, isCompact && styles.heroCompact]}
           accessibilityLabel="Fotografía editorial"
         >
           <Text style={styles.heroTag}>INTELIGENCIA QUE PROTEGE.</Text>
@@ -84,7 +104,7 @@ export default function LoginScreen() {
 
 const styles = StyleSheet.create({
   flex: { flex: 1, backgroundColor: colors.bg },
-  content: { paddingTop: 23, gap: 30 },
+  content: { paddingTop: 20, gap: 24 },
   hero: {
     height: 173,
     borderRadius: radius.xl,
@@ -93,8 +113,12 @@ const styles = StyleSheet.create({
     justifyContent: 'flex-end',
     backgroundColor: colors.surface,
   },
+  heroCompact: {
+    height: 100,
+    padding: 12,
+  },
   heroTag: { fontFamily: fonts.medium, fontSize: 10, letterSpacing: 0.17, color: colors.infoText },
-  welcome: { gap: 9 },
+  welcome: { gap: 8 },
   title: { ...text.display30, color: colors.text },
   subtitle: { ...text.body13, color: colors.textMuted },
   fields: { gap: 12 },
@@ -104,3 +128,4 @@ const styles = StyleSheet.create({
   security: { flexDirection: 'row', alignItems: 'center', gap: 6 },
   securityText: { ...text.caption10, color: colors.textMuted },
 });
+

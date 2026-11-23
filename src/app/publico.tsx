@@ -7,7 +7,11 @@ import { StatusTag } from '../components/StatusTag';
 import { audienceAges, audienceTopics } from '../data/content';
 import { colors, text } from '../theme';
 
-/** VeriMind · Público del creador */
+/**
+ * Pantalla de Análisis de Audiencia del Creador.
+ * Expone la estimación demográfica por edad mediante barras apiladas,
+ * intención comercial de compra en comentarios y tópicos recurrentes en las publicaciones.
+ */
 export default function AudienceScreen() {
   return (
     <Screen title="PÚBLICO DEL CREADOR" contentStyle={styles.content}>

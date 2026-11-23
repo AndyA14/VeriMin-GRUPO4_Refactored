@@ -1,28 +1,36 @@
 /**
  * Contenido de ejemplo de la app (datos ilustrativos del prototipo, no una auditoría real).
+ * Provee estructuras tipadas para métricas estadísticas, fases de análisis,
+ * modelo Big Five, casos de apoyo y configuración comercial de planes.
  */
 
+/** Métricas simuladas para la cuenta pública auditada */
 export const account = {
   handle: '@carlospati',
   followers: '24.8K',
   posts: '10',
   riskLabel: 'Riesgo elevado · 78 %',
+  /** Resultados de la prueba estadística de Benford (detección de números anómalos/bots) */
   benford: { chi2: '24.51', critical: '20.09' },
+  /** Frecuencia de comentarios tóxicos detectados en la muestra */
   hostileComments: { count: 3, total: 10 },
 };
 
+/** Lista de dimensiones auditadas en el perfil */
 export const analysisItems = [
   { id: 'audience', icon: 'badge', title: 'Autenticidad de la audiencia', description: 'Ley de Benford y proporciones de interacción' },
   { id: 'comm', icon: 'shield', title: 'Perfil de comunicación', description: 'Big Five con porcentajes que suman 100 %' },
   { id: 'climate', icon: 'alert', title: 'Clima de comentarios', description: 'Señales de acoso o tono hostil' },
 ] as const;
 
+/** Etapas consecutivas del proceso de escaneo y auditoría en segundo plano */
 export const processingStages = [
   { message: 'Extrayendo activos digitales y publicaciones de la cuenta pública...', progress: 113 / 309 },
   { message: 'Verificando autenticidad de la audiencia (Ley de Benford)…', progress: 200 / 309 },
   { message: 'Analizando comentarios y perfil de comunicación…', progress: 290 / 309 },
 ] as const;
 
+/** Dimensiones de personalidad lingüística basadas en el modelo Big Five */
 export const bigFive = [
   { label: 'Apertura', value: 20.6, color: '#8B5CF6' },
   { label: 'Responsabilidad', value: 21.6, color: '#22D3EE' },
@@ -31,6 +39,7 @@ export const bigFive = [
   { label: 'Neuroticismo', value: 14.6, color: '#FB7185' },
 ] as const;
 
+/** Distribución demográfica estimada de la audiencia */
 export const audienceAges = [
   { label: 'Niños', value: 10, color: '#FB7185' },
   { label: 'Adolescentes', value: 40, color: '#FBBF24' },
@@ -38,8 +47,10 @@ export const audienceAges = [
   { label: 'Adultos', value: 15, color: '#8B5CF6' },
 ] as const;
 
+/** Temáticas más frecuentes en el contenido del creador */
 export const audienceTopics = ['Moda', 'Humor', 'Videojuegos'] as const;
 
+/** Estructura de caso de apoyo psicológico/emocional para creadores de contenido */
 export interface SupportCase {
   id: string;
   chip: string;
@@ -49,6 +60,7 @@ export interface SupportCase {
   professional: string;
 }
 
+/** Casos de apoyo preconfigurados con recomendaciones y sugerencias */
 export const supportCases: SupportCase[] = [
   {
     id: 'harassment',

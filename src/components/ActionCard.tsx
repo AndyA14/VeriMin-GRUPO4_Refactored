@@ -3,13 +3,21 @@ import { Pressable, StyleSheet, Text, View } from 'react-native';
 import { BadgeCheck } from 'lucide-react-native';
 import { colors, radius, text } from '../theme';
 
+/**
+ * Propiedades del componente ActionCard.
+ */
 interface Props {
+  /** Título principal de la acción */
   title: string;
+  /** Resumen o descripción explicativa de la acción */
   description: string;
+  /** Función ejecutada al pulsar la tarjeta */
   onPress: () => void;
 }
 
-/** Acción · tarjeta pulsable con chevron (Informe con IA, Público, Apoyo). */
+/**
+ * Tarjeta interactiva de acción destacada con ícono de verificación y chevron de navegación.
+ */
 export function ActionCard({ title, description, onPress }: Props) {
   return (
     <Pressable

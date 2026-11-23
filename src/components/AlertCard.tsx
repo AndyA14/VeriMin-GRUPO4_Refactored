@@ -3,13 +3,21 @@ import { StyleSheet, Text, View } from 'react-native';
 import { AlertTriangle } from 'lucide-react-native';
 import { radius, text, Tone, tones } from '../theme';
 
+/**
+ * Propiedades del componente AlertCard.
+ */
 interface Props {
+  /** Tono de severidad de la alerta (peligro o advertencia) */
   tone: Extract<Tone, 'danger' | 'warning'>;
+  /** Título o anomalía detectada */
   title: string;
+  /** Detalle técnico o estadístico de la alerta */
   detail: string;
 }
 
-/** Alerta de integridad (anomalía / comentarios hostiles). */
+/**
+ * Tarjeta de alerta e integridad estadística (detección de anomalías de Benford o toxicidad).
+ */
 export function AlertCard({ tone, title, detail }: Props) {
   const t = tones[tone];
   return (
