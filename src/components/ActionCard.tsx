@@ -27,7 +27,7 @@ export function ActionCard({ title, description, onPress }: Props) {
       style={({ pressed }) => [styles.card, pressed && styles.pressed]}
     >
       <View style={styles.tile}>
-        <BadgeCheck size={17} color={colors.infoIcon} strokeWidth={1.5} absoluteStrokeWidth />
+        <BadgeCheck size={19} color={colors.infoIcon} strokeWidth={1.5} absoluteStrokeWidth />
       </View>
       <View style={styles.texts}>
         <Text style={styles.title}>{title}</Text>
@@ -40,30 +40,30 @@ export function ActionCard({ title, description, onPress }: Props) {
 
 const styles = StyleSheet.create({
   card: {
-    minHeight: 56,
+    minHeight: 68,
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 12,
-    paddingVertical: 6,
-    paddingHorizontal: 12,
+    gap: 14,
+    paddingVertical: 12,
+    paddingHorizontal: 16,
     backgroundColor: colors.infoBg,
     borderWidth: 1,
     borderColor: colors.infoBorder,
-    borderRadius: radius.sm,
+    borderRadius: radius.md,
   },
   pressed: { opacity: 0.85 },
   tile: {
-    width: 32,
-    height: 32,
+    width: 38,
+    height: 38,
     alignItems: 'center',
     justifyContent: 'center',
     backgroundColor: colors.iconTile,
     borderWidth: 1,
     borderColor: colors.infoBorder,
-    borderRadius: radius.sm,
+    borderRadius: radius.md,
   },
-  texts: { flex: 1, gap: 2 },
-  title: { ...text.heading12, color: colors.infoText },
-  description: { ...text.body11, color: colors.textMuted },
-  chevron: { ...text.strong15, color: colors.infoText },
+  texts: { flex: 1, gap: 3 },
+  title: { ...text.strong14, color: colors.infoText },
+  description: { ...text.body12, color: colors.textMuted },
+  chevron: { ...text.strong15, fontSize: 18, color: colors.infoIcon },
 });

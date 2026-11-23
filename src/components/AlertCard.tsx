@@ -22,7 +22,7 @@ export function AlertCard({ tone, title, detail }: Props) {
   const t = tones[tone];
   return (
     <View style={[styles.card, { backgroundColor: t.bg, borderColor: t.border }]} accessible accessibilityLabel={`${title}. ${detail}`}>
-      <AlertTriangle size={17} color={t.text} strokeWidth={1.5} absoluteStrokeWidth />
+      <AlertTriangle size={18} color={t.text} strokeWidth={1.5} absoluteStrokeWidth />
       <Text style={[styles.title, { color: t.text }]}>{title}</Text>
       <Text style={[styles.detail, { color: t.body }]}>{detail}</Text>
     </View>
@@ -30,7 +30,15 @@ export function AlertCard({ tone, title, detail }: Props) {
 }
 
 const styles = StyleSheet.create({
-  card: { flex: 1, alignSelf: 'flex-start', padding: 12, gap: 8, borderWidth: 1, borderRadius: radius.sm },
-  title: { ...text.heading12, lineHeight: 16.8 },
-  detail: { ...text.body11 },
+  card: {
+    flex: 1,
+    alignSelf: 'stretch',
+    padding: 14,
+    gap: 8,
+    borderWidth: 1,
+    borderRadius: radius.md,
+    justifyContent: 'flex-start',
+  },
+  title: { ...text.heading12, lineHeight: 17 },
+  detail: { ...text.body11, lineHeight: 15 },
 });

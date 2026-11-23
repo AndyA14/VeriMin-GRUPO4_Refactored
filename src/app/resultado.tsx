@@ -9,7 +9,7 @@ import { ProfilePhoto } from '../components/ProfilePhoto';
 import { Screen } from '../components/Screen';
 import { StatusTag } from '../components/StatusTag';
 import { account } from '../data/content';
-import { colors, layout, text } from '../theme';
+import { colors, layout, radius, text } from '../theme';
 import { useApp } from '../state/AppState';
 
 /**
@@ -20,7 +20,7 @@ import { useApp } from '../state/AppState';
  */
 function Metric({ value, label }: { value: string; label: string }) {
   return (
-    <Card radiusSize={8} style={styles.metric}>
+    <Card radiusSize={radius.md} style={styles.metric}>
       <Text style={styles.metricValue}>{value}</Text>
       <Text style={styles.metricLabel}>{label}</Text>
     </Card>
@@ -91,37 +91,40 @@ export default function ResultScreen() {
         />
       </View>
 
-      <ActionCard
-        title="Informe con IA"
-        description="Recomendación redactada a partir de los resultados"
-        onPress={() => router.push('/informe')}
-      />
-      <ActionCard
-        title="Público del creador"
-        description="Quién lo ve y qué tanto compra su audiencia"
-        onPress={() => router.push('/publico')}
-      />
-      <ActionCard
-        title="Apoyo al creador"
-        description="Guía de apoyo con ejemplos de comentarios"
-        onPress={() => router.push('/apoyo')}
-      />
+      <View style={styles.actionsSection}>
+        <ActionCard
+          title="Informe con IA"
+          description="Recomendación redactada a partir de los resultados"
+          onPress={() => router.push('/informe')}
+        />
+        <ActionCard
+          title="Público del creador"
+          description="Quién lo ve y qué tanto compra su audiencia"
+          onPress={() => router.push('/publico')}
+        />
+        <ActionCard
+          title="Apoyo al creador"
+          description="Guía de apoyo con ejemplos de comentarios"
+          onPress={() => router.push('/apoyo')}
+        />
+      </View>
     </Screen>
   );
 }
 
 const styles = StyleSheet.create({
-  content: { paddingTop: 14, gap: 23, paddingBottom: 110 },
+  content: { paddingTop: 16, gap: 26, paddingBottom: 120 },
   title: { ...text.title27, color: colors.text },
   profile: { flexDirection: 'row', alignItems: 'center', gap: 14 },
   identity: { flex: 1, gap: 12 },
   nickBlock: { gap: 6 },
   nickname: { ...text.nickname, color: colors.text },
-  metrics: { flexDirection: 'row', gap: 8 },
-  metric: { flex: 1, height: 80, padding: 11, gap: 5 },
+  metrics: { flexDirection: 'row', gap: 10 },
+  metric: { flex: 1, height: 84, padding: 12, gap: 6, borderRadius: radius.md },
   metricValue: { ...text.metric, color: colors.text },
-  metricLabel: { ...text.caption10, lineHeight: 13, color: colors.textMuted },
-  signals: { flexDirection: 'row', gap: 9, alignItems: 'flex-start' },
+  metricLabel: { ...text.caption10, lineHeight: 14, color: colors.textMuted },
+  signals: { flexDirection: 'row', gap: 12, alignItems: 'stretch' },
+  actionsSection: { gap: 14 },
   overlayBar: {
     position: 'absolute',
     left: 0,
