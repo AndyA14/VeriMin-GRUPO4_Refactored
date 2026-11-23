@@ -73,7 +73,7 @@ export default function ProcessingScreen() {
                 source={source}
                 style={[styles.thumbImage, isCompact && { height: 80 }]}
                 blurRadius={1.5}
-                accessibilityElementsHidden
+                aria-hidden={true}
               />
               <View style={styles.marker} />
             </View>
