@@ -1,0 +1,2 @@
+# Bounded Context: Facturación
+# Capa de Infraestructura: Pasarelas de pago (Stripe, MercadoPago), persistencia transaccional y recibos.

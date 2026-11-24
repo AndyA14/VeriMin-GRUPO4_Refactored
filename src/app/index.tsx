@@ -15,7 +15,7 @@ import { Field } from '../components/Field';
 import { Logo } from '../components/Logo';
 import { Screen } from '../components/Screen';
 import { useApp } from '../state/AppState';
-import { correoValido, nombreDesdeCorreo } from '../utils/formato';
+import { contenedor } from '../composition';
 import { colors, fonts, radius, text } from '../theme';
 
 /**
@@ -37,12 +37,12 @@ export default function LoginScreen() {
 
   const isCompact = height < 600;
 
-  /** Valida el correo y longitud mínima de contraseña antes de ingresar */
-  const iniciarSesion = () => {
-    if (!correoValido(email)) return setError('Ingresa un correo corporativo válido.');
-    if (password.length < 6) return setError('La contraseña debe tener al menos 6 caracteres.');
+  /** Inicia sesión mediante el caso de uso del contexto de identidad */
+  const iniciarSesion = async () => {
+    const resultado = await contenedor.identidad.iniciarSesion.ejecutar({ email, clave: password });
+    if (resultado.esFallo) return setError(resultado.error);
     setError(null);
-    setUserName(nombreDesdeCorreo(email));
+    setUserName(resultado.valor.nombre);
     router.replace('/buscar');
   };
 

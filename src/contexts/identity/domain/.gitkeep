@@ -1,0 +1,2 @@
+# Bounded Context: Identidad (Identity)
+# Capa de Dominio: Entidades de usuario, credenciales, roles y reglas de autenticación/autorización.

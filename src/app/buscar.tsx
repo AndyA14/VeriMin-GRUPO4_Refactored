@@ -6,10 +6,10 @@ import { IconRow } from '../components/IconRow';
 import { Logo } from '../components/Logo';
 import { Screen } from '../components/Screen';
 import { StatusTag } from '../components/StatusTag';
+import { contenedor } from '../composition';
 import { analysisItems, plans } from '../data/content';
 import { useApp } from '../state/AppState';
 import { colors, radius, text } from '../theme';
-import { normalizarUsuario } from '../utils/formato';
 
 /**
  * Pantalla Principal de Búsqueda y Auditoría de VeriMind.
@@ -24,12 +24,23 @@ export default function SearchScreen() {
   const router = useRouter();
   const { plan, userName, setHandle: guardarUsuario } = useApp();
   const [handle, setHandle] = useState('');
+  const [error, setError] = useState<string | null>(null);
+  const [analizando, setAnalizando] = useState(false);
 
   const planName = plans.find((p) => p.id === plan)?.name;
 
-  /** Normaliza el usuario ingresado e inicia la secuencia de análisis */
-  const analyze = () => {
-    guardarUsuario(normalizarUsuario(handle));
+  /** Ejecuta el análisis de la cuenta mediante el caso de uso del contenedor DDD */
+  const analyze = async () => {
+    if (analizando) return;
+    setError(null);
+    setAnalizando(true);
+    const resultado = await contenedor.analisis.analizarCuenta.ejecutar({ usuario: handle });
+    setAnalizando(false);
+    if (resultado.esFallo) {
+      setError(resultado.error);
+      return;
+    }
+    guardarUsuario(resultado.valor.handle.valor);
     router.push('/procesando');
   };
 
@@ -51,6 +62,7 @@ export default function SearchScreen() {
         <Text style={styles.greeting}>¡Hola {userName}!</Text>
         <Text style={styles.lead}>Bienvenido al centro de auditoría</Text>
       </View>
+      {error ? <Text style={styles.error}>{error}</Text> : null}
 
       <View style={styles.searchSection}>
         <View style={styles.searchRow}>
@@ -106,5 +118,5 @@ const styles = StyleSheet.create({
   list: { gap: 8, paddingBottom: 16 },
   listTitle: { ...text.label13, color: colors.text },
   disclaimer: { ...text.caption10, color: colors.textMuted },
+  error: { ...text.caption10, color: colors.dangerText, marginTop: 8 },
 });
-
