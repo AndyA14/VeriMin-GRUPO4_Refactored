@@ -123,7 +123,13 @@ const styles = StyleSheet.create({
   metric: { flex: 1, height: 84, padding: 12, gap: 6, borderRadius: radius.md },
   metricValue: { ...text.metric, color: colors.text },
   metricLabel: { ...text.caption10, lineHeight: 14, color: colors.textMuted },
-  signals: { flexDirection: 'row', gap: 12, alignItems: 'stretch' },
+  signals: {
+    flexDirection: 'row',
+    gap: 12,
+    alignItems: 'stretch',
+    marginTop: 12,
+    marginBottom: 14,
+  },
   actionsSection: { gap: 14 },
   overlayBar: {
     position: 'absolute',
