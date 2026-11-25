@@ -8,7 +8,7 @@ import { IconRow } from '../components/IconRow';
 import { Screen } from '../components/Screen';
 import { StatusTag } from '../components/StatusTag';
 import { supportCases, supportResources } from '../data/content';
-import { colors, text } from '../theme';
+import { colors, radius, text } from '../theme';
 
 /**
  * Pantalla de Apoyo al Creador y Clima Emocional.
@@ -38,8 +38,10 @@ export default function SupportScreen() {
         </BottomSheet>
       }
     >
-      <Text style={styles.title}>Apoyo al creador</Text>
-      <Text style={styles.subtitle}>Vista del equipo del creador · con su autorización</Text>
+      <View style={styles.headerBlock}>
+        <Text style={styles.title}>Apoyo al creador</Text>
+        <Text style={styles.subtitle}>Vista del equipo del creador · con su autorización</Text>
+      </View>
 
       <View style={styles.cases}>
         <Text style={styles.caption}>Ejemplos del prototipo · cambia el caso</Text>
@@ -50,13 +52,13 @@ export default function SupportScreen() {
         </View>
       </View>
 
-      <Card tone="info" style={styles.detected}>
+      <Card tone="info" radiusSize={radius.md} style={styles.detected}>
         <StatusTag tone="info" label="Qué detectamos" />
         <Text style={styles.detectedTitle}>{current.headline}</Text>
         <Text style={styles.detectedBody}>{current.detail}</Text>
       </Card>
 
-      <Card style={styles.help}>
+      <Card radiusSize={radius.md} style={styles.help}>
         <Text style={styles.cardTitle}>La app te recomienda</Text>
         {current.tips.map((tip) => (
           <View key={tip} style={styles.tip}>
@@ -66,7 +68,7 @@ export default function SupportScreen() {
         ))}
       </Card>
 
-      <Card style={styles.help}>
+      <Card radiusSize={radius.md} style={styles.help}>
         <Text style={styles.cardTitle}>Cuándo buscar un profesional</Text>
         <Text style={styles.professional}>{current.professional}</Text>
         <Button label="Ver recursos de apoyo" onPress={() => setSheetOpen(true)} style={styles.resourcesButton} />
@@ -78,23 +80,24 @@ export default function SupportScreen() {
 }
 
 const styles = StyleSheet.create({
-  content: { paddingTop: 4, gap: 14 },
+  content: { paddingTop: 16, gap: 22, paddingBottom: 60 },
+  headerBlock: { gap: 6 },
   title: { ...text.title24, color: colors.text },
-  subtitle: { ...text.body12, color: colors.textMuted },
-  cases: { gap: 6 },
-  chips: { flexDirection: 'row', flexWrap: 'wrap', gap: 8 },
+  subtitle: { ...text.body13, lineHeight: 18, color: colors.textMuted },
+  cases: { gap: 8 },
+  chips: { flexDirection: 'row', flexWrap: 'wrap', gap: 10 },
   caption: { ...text.caption10, color: colors.textMuted },
-  detected: { gap: 6 },
-  detectedTitle: { ...text.strong14, lineHeight: 18.2, color: colors.infoText, marginTop: 6 },
-  detectedBody: { ...text.body12, color: colors.infoBody },
-  help: { gap: 8 },
-  cardTitle: { ...text.heading13, color: colors.text },
-  tip: { flexDirection: 'row', gap: 8 },
-  bullet: { ...text.body12, color: colors.textMuted },
-  tipText: { ...text.body12, flex: 1, color: colors.textSoft },
-  professional: { ...text.body12, color: colors.textMuted },
+  detected: { paddingVertical: 16, paddingHorizontal: 16, gap: 10 },
+  detectedTitle: { ...text.strong15, lineHeight: 20, color: colors.infoText, marginTop: 4 },
+  detectedBody: { ...text.body13, lineHeight: 19, color: colors.infoBody },
+  help: { paddingVertical: 16, paddingHorizontal: 16, gap: 12 },
+  cardTitle: { ...text.strong14, lineHeight: 19, color: colors.text },
+  tip: { flexDirection: 'row', gap: 10, alignItems: 'flex-start' },
+  bullet: { ...text.body13, lineHeight: 19, color: colors.textMuted },
+  tipText: { ...text.body13, lineHeight: 19, flex: 1, color: colors.textSoft },
+  professional: { ...text.body13, lineHeight: 19, color: colors.textMuted },
   resourcesButton: { marginTop: 8 },
   sheetTitle: { ...text.sheetTitle, color: colors.text },
-  sheetLead: { ...text.body13, color: colors.textMuted },
-  resources: { gap: 8 },
+  sheetLead: { ...text.body13, lineHeight: 18, color: colors.textMuted },
+  resources: { gap: 10 },
 });

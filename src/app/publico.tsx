@@ -5,7 +5,7 @@ import { Screen } from '../components/Screen';
 import { StackedBar } from '../components/StackedBar';
 import { StatusTag } from '../components/StatusTag';
 import { audienceAges, audienceTopics } from '../data/content';
-import { colors, text } from '../theme';
+import { colors, radius, text } from '../theme';
 
 /**
  * Pantalla de Análisis de Audiencia del Creador.
@@ -15,12 +15,14 @@ import { colors, text } from '../theme';
 export default function AudienceScreen() {
   return (
     <Screen title="PÚBLICO DEL CREADOR" contentStyle={styles.content}>
-      <Text style={styles.title}>¿Qué público atrae?</Text>
-      <Text style={styles.subtitle}>Estimado por el lenguaje de sus comentarios. Solo cifras agregadas.</Text>
+      <View style={styles.headerBlock}>
+        <Text style={styles.title}>¿Qué público atrae?</Text>
+        <Text style={styles.subtitle}>Estimado por el lenguaje de sus comentarios. Solo cifras agregadas.</Text>
+      </View>
 
-      <Card style={styles.card}>
+      <Card radiusSize={radius.md} style={styles.card}>
         <Text style={styles.cardTitle}>Edad estimada de quienes comentan</Text>
-        <StackedBar segments={audienceAges} height={10} radiusSize={5} />
+        <StackedBar segments={audienceAges} height={12} radiusSize={6} />
         <View style={styles.legend}>
           {audienceAges.map((a) => (
             <View key={a.label} style={styles.legendItem}>
@@ -34,7 +36,7 @@ export default function AudienceScreen() {
         <Text style={styles.total}>Total: 100 %</Text>
       </Card>
 
-      <Card tone="success" style={styles.card}>
+      <Card tone="success" radiusSize={radius.md} style={styles.card}>
         <View style={styles.figureRow}>
           <Text style={styles.figure}>22 %</Text>
           <StatusTag tone="success" label="Interés alto" />
@@ -42,7 +44,7 @@ export default function AudienceScreen() {
         <Text style={styles.body}>de los comentarios preguntan por el precio o dónde comprar.</Text>
       </Card>
 
-      <Card style={styles.card}>
+      <Card radiusSize={radius.md} style={styles.card}>
         <Text style={styles.cardTitle}>Temas que más se repiten</Text>
         <View style={styles.topics}>
           {audienceTopics.map((topic) => (
@@ -51,7 +53,7 @@ export default function AudienceScreen() {
         </View>
       </Card>
 
-      <Card tone="warning" style={styles.card}>
+      <Card tone="warning" radiusSize={radius.md} style={styles.card}>
         <Text style={[styles.cardTitle, { color: colors.warningText }]}>Para qué te sirve</Text>
         <Text style={[styles.body, { color: colors.warningBody }]}>
           Ideal para marcas de ropa, accesorios y videojuegos. Evita alcohol y apuestas: la mitad del público estimado es
@@ -67,19 +69,20 @@ export default function AudienceScreen() {
 }
 
 const styles = StyleSheet.create({
-  content: { paddingTop: 8, gap: 14 },
+  content: { paddingTop: 16, gap: 22, paddingBottom: 60 },
+  headerBlock: { gap: 6 },
   title: { ...text.title24, color: colors.text },
-  subtitle: { ...text.body12, color: colors.textMuted },
-  card: { gap: 8 },
-  cardTitle: { ...text.heading13, color: colors.text },
-  legend: { flexDirection: 'row', flexWrap: 'wrap', columnGap: 10, rowGap: 4 },
-  legendItem: { flexDirection: 'row', alignItems: 'center', gap: 5 },
+  subtitle: { ...text.body13, lineHeight: 18, color: colors.textMuted },
+  card: { paddingVertical: 16, paddingHorizontal: 16, gap: 12 },
+  cardTitle: { ...text.strong14, lineHeight: 19, color: colors.text },
+  legend: { flexDirection: 'row', flexWrap: 'wrap', columnGap: 14, rowGap: 8 },
+  legendItem: { flexDirection: 'row', alignItems: 'center', gap: 6 },
   dot: { width: 8, height: 8, borderRadius: 4 },
-  legendText: { ...text.body11, lineHeight: 13, color: colors.textSoft },
-  total: { ...text.chip, color: colors.successText },
-  figureRow: { flexDirection: 'row', alignItems: 'center', gap: 10 },
-  figure: { ...text.title24, lineHeight: 29, color: colors.successText },
-  body: { ...text.body12, color: colors.textSoft },
-  topics: { flexDirection: 'row', flexWrap: 'wrap', gap: 8 },
-  caption: { ...text.caption10, color: colors.textMuted },
+  legendText: { ...text.body12, lineHeight: 16, color: colors.textSoft },
+  total: { ...text.chip, color: colors.successText, marginTop: 2 },
+  figureRow: { flexDirection: 'row', alignItems: 'center', gap: 12 },
+  figure: { ...text.display29, color: colors.successText },
+  body: { ...text.body13, lineHeight: 19, color: colors.textSoft },
+  topics: { flexDirection: 'row', flexWrap: 'wrap', gap: 10 },
+  caption: { ...text.caption10, lineHeight: 15, color: colors.textMuted, marginTop: 4 },
 });
