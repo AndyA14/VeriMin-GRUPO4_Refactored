@@ -7,7 +7,7 @@
 
 > **Alcance académico:** prototipo de **frontend móvil interactivo** construido con React Native y Expo Router. Su objetivo es demostrar interfaces, navegación, organización por componentes, modelado DDD y arquitectura hexagonal **mediante lógica local, datos ilustrativos y adaptadores simulados**. No se exige ni se afirma un backend productivo.
 
-> **Corte de revisión documental:** 24 de noviembre de 2026 (hora de Ecuador). Se consultaron el árbol de `main` y los PRs #1–#12: **todos figuran fusionados** en el corte. Los PRs #10 (responsive/JSDoc), #11 (documentación) y #12 (app/tema/script de pruebas) forman parte de la rama principal. Las pruebas de 15 suites/63 casos están **reportadas en los PRs y Confluence**, pero no fueron ejecutadas de forma independiente en esta auditoría.
+> **Corte de revisión documental:** 25 de noviembre de 2026 (hora de Ecuador). Se consultaron el árbol de `main` (commit `ba37ed4`) y los PRs #1–#14: **todos figuran fusionados** en el corte. Los PRs #10 (responsive/JSDoc), #11 (documentación) y #12 (app/tema/script de pruebas) forman parte de la rama principal. Las pruebas (15 suites, 63 casos) se ejecutaron con `npm test` en esa fecha y **aprobaron**.
 
 ## Navegación rápida
 
@@ -142,7 +142,7 @@ La **arquitectura hexagonal se aplica en el frontend**, con dominio y aplicació
 | Informes y PDF | Pantalla ilustrativa; el botón de PDF muestra Toast, no crea archivo |
 | Planes/pago | Flujos visuales, no facturación de producción |
 | Adaptación 9:16, 16:9 y 1:1 | **Cambios integrados mediante PR #10.** Aún se necesitan capturas/pruebas específicas para acreditar cada formato; `app.json` mantiene `orientation: portrait`. |
-| Pruebas | Jest, lint y typecheck configurados; PR #10 **reporta** 15 suites y 63 pruebas, sin ejecución independiente en esta auditoría |
+| Pruebas | Jest, lint y typecheck configurados; `npm test` ejecutado el 25/11/2026 sobre `ba37ed4`: **15 suites y 63 pruebas aprobadas**. No hay pruebas automáticas de pantallas ni de responsive |
 
 > **Diferencia importante:** 393 × 852 representa aproximadamente **9:19,5**, no 9:16 exacto. También **18:9 no es 16:9**. Aunque el PR #10 introduce adaptación por dimensiones, cada proporción exigida debe comprobarse mediante capturas o ejecución.
 
@@ -212,7 +212,7 @@ La documentación técnica principal se organiza en los bloques A–E de Conflue
 | Repositorio refactorizado | [Ver GitHub](https://github.com/AndyA14/VeriMin-GRUPO4_Refactored) |
 | Repositorio anterior | [Ver GitHub](https://github.com/AndyA14/VeriMind-Gmoviles) |
 | Diseño y prototipos en Figma | [Abrir archivo Moviles](https://www.figma.com/design/Wyt8RCSYYWKs4xzLd5ptPF/Moviles?node-id=161-131) |
-| Jira | [Tablero KAN](https://verimind.atlassian.net/wiki/external/NThmN2UyZTY1ZTBjNGRmMjhkNTEzOTJmYmRmMTFjY2Y) |
+| Jira | Tablero KAN: requiere cuenta Atlassian del proyecto; la organización del trabajo está documentada en el Bloque E de Confluence |
 | Página de enlaces de Confluence | [Abrir](https://verimind.atlassian.net/wiki/external/NjU3YzNlODk3NTE1NDcxZDk4OGJhYjc2MzE0MDM2MWM) |
 
 ## Información técnica ampliada
@@ -225,8 +225,8 @@ Las siguientes secciones pueden **desplegarse y contraerse** en la vista de GitH
 
 ## IA utilizadas por los integrantes del Grupo
 
-- **Andy:** Claude Sonet 5.5 y Gemini Flash 3.8
-- **Carlos:** Claude Sonet 5.5
+- **Andy:** Claude Sonnet 5.5 y Gemini Flash 3.8
+- **Carlos:** Claude Sonnet 5.5
 - **Joseph:** Claude Opus 5.5
 - **Petter:** Chat GPT
 
@@ -271,7 +271,7 @@ La aplicación es un prototipo interactivo funcional desarrollado con **Expo Rou
 - **Informes y Métricas Simulados:** Visualización de proporciones Big Five y rangos de edad mediante gráficos de barras apiladas (`StackedBar`), métricas de riesgo y anomalías de Benford.
 - **Módulo de Apoyo al Creador:** Selector reactivo de casos de riesgo (acoso, tensión) y panel deslizable (`BottomSheet`) con recursos y canales de ayuda.
 - **Planes y Suscripción Simulados:** Selección de planes (Gratis, Esencial, Profesional y Agencia), pasarela simulada con métodos de pago (tarjeta/transferencia) y sistema de notificaciones flotantes (*Toast*).
-- **Control de calidad disponible:** TypeScript, ESLint, validación arquitectónica y pruebas Jest definidas en `package.json`. Los PRs #10 y #12 reportan 63 pruebas aprobadas; los resultados deben volver a ejecutarse en el commit definitivo.
+- **Control de calidad disponible:** TypeScript, ESLint, validación arquitectónica y pruebas Jest definidas en `package.json`. `npm test` ejecutado el 25 de noviembre de 2026 sobre `ba37ed4`: 15 suites y 63 pruebas aprobadas.
 
 ---
 
