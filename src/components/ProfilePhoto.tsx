@@ -2,6 +2,9 @@ import React from 'react';
 import { Image, StyleSheet } from 'react-native';
 import { colors, radius } from '../theme';
 
+/**
+ * Muestra la imagen de perfil de la cuenta auditada con bordes redondeados y fondo de reserva.
+ */
 export function ProfilePhoto() {
   return (
     <Image

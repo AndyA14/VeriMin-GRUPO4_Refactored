@@ -1,22 +1,34 @@
 import type { TextStyle } from 'react-native';
 
-/** Tokens leídos del archivo de Figma "Moviles" (VeriMind · Colores). */
+/**
+ * Sistema de diseño y tokens visuales de VeriMind.
+ * Extraídos y normalizados a partir del archivo de Figma "Moviles" (VeriMind · Colores y Tipografía).
+ */
 export const colors = {
+  /** Fondo general de la aplicación */
   bg: '#070A12',
+  /** Superficie estándar para tarjetas y contenedores */
   surface: '#101725',
+  /** Superficie con elevación visual para barras flotantes o campos */
   surfaceElevated: '#1E293B',
+  /** Borde predeterminado para tarjetas e inputs */
   border: '#253044',
+  /** Texto principal de alto contraste */
   text: '#F5F7FC',
+  /** Texto secundario o atenuado */
   textMuted: '#9AA8BE',
+  /** Texto con contraste suave para descripciones */
   textSoft: '#C4CFE0',
+  /** Color para placeholders en campos de entrada */
   placeholder: '#94A3B8',
 
-  /** Fondo de los botones principales. El sistema de diseño sugiere #2563EB (mejor contraste con texto blanco). */
+  /** Fondo de los botones principales. Sugerido #2563EB para mejor contraste con texto blanco */
   button: '#3B82F6',
   blue: '#3B82F6',
   blueStrong: '#2563EB',
   onBlue: '#FFFFFF',
 
+  // Colores semánticos para información y acentos celestes
   infoIcon: '#60A5FA',
   infoText: '#A8CEFF',
   infoBody: '#C4D9F5',
@@ -24,19 +36,23 @@ export const colors = {
   infoBorder: '#28528A',
   iconTile: '#102A52',
 
+  // Colores semánticos para estados de peligro y riesgo crítico
   dangerText: '#FF8C97',
   dangerBg: '#34151F',
   dangerBorder: '#7D3043',
 
+  // Colores semánticos para advertencias y atención
   warningText: '#FBBF24',
   warningBg: '#332507',
   warningBorder: '#7A5A12',
   warningBody: '#E5D9B8',
 
+  // Colores semánticos para éxito y confirmación
   successText: '#80E7BE',
   successBg: '#0D3029',
   successBorder: '#24624E',
 
+  // Elementos específicos de componentes
   chatPanel: '#0B111D',
   userBubble: '#172A47',
   userBubbleBorder: '#2A466D',
@@ -48,6 +64,7 @@ export const colors = {
   skeleton: 'rgba(92,112,139,0.4)',
   spinnerLight: '#B9DEFF',
 
+  // Paleta de series para gráficos y métricas (Big Five y Audiencia)
   series: {
     violet: '#8B5CF6',
     cyan: '#22D3EE',
@@ -57,6 +74,7 @@ export const colors = {
   },
 } as const;
 
+/** Familia de fuentes tipográficas basadas en Inter (Google Fonts) */
 export const fonts = {
   regular: 'Inter_400Regular',
   medium: 'Inter_500Medium',
@@ -64,13 +82,24 @@ export const fonts = {
   bold: 'Inter_700Bold',
 } as const;
 
+/** Radios de curvatura en bordes para contenedores, tarjetas y píldoras */
 export const radius = { sm: 8, md: 12, lg: 16, xl: 20, pill: 100 } as const;
 
-export const layout = { screenX: 24, navHeight: 48 } as const;
+/** Medidas de disposición espacial predeterminadas */
+export const layout = {
+  /** Margen horizontal estándar en pantallas móviles */
+  screenX: 24,
+  /** Altura estándar de la barra de navegación superior */
+  navHeight: 48,
+  /** Ancho máximo de contenido para optimizar lectura en pantallas anchas (tablets, 1:1, landscape) */
+  maxContentWidth: 560,
+} as const;
 
 const t = <T extends TextStyle>(style: T) => style;
 
-/** Estilos de texto (tamaño / interlineado en px). */
+/**
+ * Escala tipográfica estructurada con tamaño de fuente, altura de línea y espaciado de letras.
+ */
 export const text = {
   display30: t({ fontFamily: fonts.semiBold, fontSize: 30, lineHeight: 33.6, letterSpacing: -0.33 }),
   display29: t({ fontFamily: fonts.semiBold, fontSize: 29, lineHeight: 33.4, letterSpacing: -0.29 }),
@@ -102,8 +131,10 @@ export const text = {
   caption10: t({ fontFamily: fonts.regular, fontSize: 10, lineHeight: 14 }),
 } as const;
 
+/** Tonos semánticos disponibles para tarjetas, etiquetas y alertas */
 export type Tone = 'neutral' | 'info' | 'danger' | 'warning' | 'success';
 
+/** Mapeo de combinaciones de color (fondo, borde, título, cuerpo) para cada tono */
 export const tones: Record<Tone, { bg: string; border: string; text: string; body: string }> = {
   neutral: { bg: colors.surface, border: colors.border, text: colors.text, body: colors.textMuted },
   info: { bg: colors.infoBg, border: colors.infoBorder, text: colors.infoText, body: colors.infoBody },

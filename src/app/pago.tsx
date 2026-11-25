@@ -11,9 +11,14 @@ import { plans } from '../data/content';
 import { useApp } from '../state/AppState';
 import { colors, text } from '../theme';
 
+/** Métodos de pago admitidos en la interfaz */
 type Method = 'card' | 'transfer';
 
-/** VeriMind · Pago */
+/**
+ * Pantalla de Confirmación y Simulación de Pago de VeriMind.
+ * Permite seleccionar el método de pago (Tarjeta o Transferencia),
+ * revisar el resumen de facturación mensual y activar el plan seleccionado.
+ */
 export default function PaymentScreen() {
   const router = useRouter();
   const { setPlan, notify } = useApp();
@@ -22,6 +27,7 @@ export default function PaymentScreen() {
 
   const plan = plans.find((p) => p.id === planParam) ?? plans[2];
 
+  /** Simula la activación del plan de pago y retorna a la vista principal */
   const pay = () => {
     setPlan(plan.id);
     notify(`Plan ${plan.name} activado (ejemplo)`);

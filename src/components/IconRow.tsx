@@ -3,13 +3,21 @@ import { StyleSheet, Text, View } from 'react-native';
 import { colors, radius, text } from '../theme';
 import { iconFor, IconKey } from './icons';
 
+/**
+ * Propiedades del componente IconRow.
+ */
 interface Props {
+  /** Clave del ícono vectorial a renderizar */
   icon: IconKey;
+  /** Título de la fila */
   title: string;
+  /** Descripción explicativa */
   description: string;
 }
 
-/** Fila con ícono, título y descripción (Qué analizaremos, Recursos de apoyo). */
+/**
+ * Fila informativa con ícono enmarcado, título contrastado y descripción secundaria.
+ */
 export function IconRow({ icon, title, description }: Props) {
   const icono = React.createElement(iconFor(icon), {
     size: icon === 'shield' || icon === 'send' ? 14 : 17,

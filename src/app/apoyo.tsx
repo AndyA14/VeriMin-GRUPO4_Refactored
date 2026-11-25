@@ -10,7 +10,12 @@ import { StatusTag } from '../components/StatusTag';
 import { supportCases, supportResources } from '../data/content';
 import { colors, text } from '../theme';
 
-/** VeriMind · Apoyo al creador (acoso / tono agresivo / malestar intenso) + panel de recursos */
+/**
+ * Pantalla de Apoyo al Creador y Clima Emocional.
+ * Ofrece orientación al equipo de representación ante escenarios de acoso digital,
+ * tono agresivo o malestar emocional intenso, incluyendo un panel inferior (BottomSheet)
+ * con recursos y pautas de acompañamiento profesional.
+ */
 export default function SupportScreen() {
   const [caseId, setCaseId] = useState(supportCases[0].id);
   const [sheetOpen, setSheetOpen] = useState(false);

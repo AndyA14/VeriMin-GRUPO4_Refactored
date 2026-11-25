@@ -125,6 +125,8 @@ Modelo táctico detallado: [Diseño táctico en Confluence](https://verimind.atl
 | Raíz de composición | `src/composition/container.ts` | Hecho |
 | Pantallas conectadas a casos de uso | `index`, `buscar`, `resultado`, `informe`, `chat` usan `contenedor` | Hecho; `planes` y `pago` siguen con datos locales (facturación no incluida en esta entrega) |
 | Historial de ramas y Pull Requests | Sección 4 de este README | Hecho |
+| Documentación exhaustiva JSDoc | Todo `src/` (pantallas, componentes, estado y temas documentados con `@param`, `@returns` y notas responsive) | Hecho |
+| Diseño responsive multidispositivo | Soporte adaptativo para ratios 1:1, 18:9, 9:18 y 9:16 en `Screen`, `BottomSheet` y vistas elásticas | Hecho |
 
 Documento técnico: [Arquitectura hexagonal en Confluence](https://verimind.atlassian.net/wiki/external/ZGM2ZjdjZDBkZTgzNDhmODgwNmRjMmNkOTcxZWI3ZmQ).
 
@@ -142,7 +144,7 @@ Documento técnico: [Arquitectura hexagonal en Confluence](https://verimind.atla
 | Joseph Ponce | `feat/ddd-context-identity` | Contexto de identidad: `Email`, `Contrasena`, `Usuario`, `IniciarSesion`, repositorio en memoria, registro en el contenedor y conexión del login | #4 (integrado) |
 | Joseph Ponce | `docs/readme-completo` | README completo: DDD, hexagonal, equipo, enlaces y estado real | #5 (integrado) |
 | Joseph Ponce | `feat/benford-desde-metricas`, `fix/restaurar-benford` | `PruebaBenford.desdeMetricas`: cálculo de χ² desde métricas, con pruebas | Integrado |
-| [COMPLETAR] | [COMPLETAR] | Ajuste de la interfaz al formato 9:16 | En progreso |
+| Andrés Aucancela | `fix-responsive-and-comments` | Diseño responsive completo (1:1, 18:9, 9:18 y 9:16), documentación exhaustiva JSDoc en todo `src/`, rediseño y espaciado de `AlertCard` y `ActionCard`, accesibilidad web (`aria-hidden`) e integración sinérgica con DDD | PR #10 (listo para revisión) |
 
 Facturación (`Plan`, `Suscripcion`, `ActivarPlan`) está diseñada pero no forma parte de esta entrega.
 
@@ -169,8 +171,9 @@ Responsabilidades y evidencias: [Organización del desarrollo en Confluence](htt
 
 - **Archivo de diseño:** [Moviles — VeriMind](https://www.figma.com/design/Wyt8RCSYYWKs4xzLd5ptPF/Moviles?node-id=0-1&t=jTQnLaIv0eh2W7GM-1) — 16 pantallas móviles (frames de 393×852).
 - **Componentes:** el código organiza la interfaz en componentes reutilizables (`src/components/`), correspondientes a los átomos, moléculas y organismos del diseño.
-- **Formato de presentación: 9:16.** La aplicación se presenta en relación de aspecto 9:16 (por ejemplo 360×640 o 405×720 dp). [COMPLETAR: capturas de las pantallas en 9:16 como evidencia.]
-- **Otras proporciones (16:9 y 1:1):** [COMPLETAR según lo validado].
+- **Formato vertical estándar y extendido (9:16 y 9:18):** Relaciones de aspecto móviles típicas (ej. 360×640, 393×852, 412×915 dp). Se implementaron `ScrollView` envolventes en `Screen` y `BottomSheet`, evitando desbordamientos; se diseñó la barra inferior elástica (`overlayBar` en `resultado.tsx`) con flexbox dinámico para prevenir solapamientos entre la nota legal y el botón flotante (FAB) de chat; y se ajustó el espaciado vertical de las tarjetas de anomalías (`marginTop: 12`, `marginBottom: 14`) para máxima legibilidad.
+- **Formato cuadrado (1:1):** Para pantallas plegables (foldables desplegados) o ventanas divididas (*split-screen*). Se aplica la constante `layout.maxContentWidth` (560 dp) centrada con `alignSelf: 'center'` en `Screen.tsx`, `BottomSheet.tsx` y contenedores clave, evitando que campos, formularios y tarjetas se dispersen excesivamente en pantallas anchas.
+- **Formato horizontal / apaisado (18:9 y 16:9):** Para dispositivos en modo apaisado (*landscape*). Mediante el hook reactivo `useWindowDimensions()`, la aplicación detecta alturas reducidas (`height < 600 dp`) adaptando el hero visual en el login (`heroCompact` a 100 dp) y simplificando la cabecera del chat para priorizar el área de conversación.
 
 ---
 
@@ -186,7 +189,9 @@ Responsabilidades y evidencias: [Organización del desarrollo en Confluence](htt
 | Chat con IA | No implementado: respuestas de ejemplo |
 | Informe en PDF | No implementado: muestra un aviso (*Toast*) |
 | Planes y pago | Maqueta con datos locales; no se procesa ningún pago real |
-| Formato 9:16 | En verificación |
+| Formato responsive (1:1, 18:9, 9:18 y 9:16) | Funciona: adaptado mediante `Screen` centrado, `BottomSheet` dinámico, `ScrollView` y consultas elásticas de ventana |
+| Compatibilidad Web | Funciona: soporte para `npx expo start --web` con `react-dom`, `react-native-web` y atributos de accesibilidad `aria-hidden` |
+| Documentación de código (JSDoc) | 100 % cubierto: todos los archivos en `src/` documentados con bloques JSDoc, `@param`, `@returns` y notas de adaptabilidad |
 
 ### Limitaciones y consideraciones éticas
 
@@ -214,6 +219,7 @@ Los prompts utilizados se detallan en el informe técnico: [COMPLETAR: sección 
 - **Expo SDK:** `~58.0.25`
 - **Expo Router:** `~58.0.31`
 - **React / React Native:** `19.3.0` / `0.88.1`
+- **Soporte Web:** `react-dom` (`19.3.0`), `react-native-web` (`^0.21.4`)
 - **TypeScript:** `~6.0.3`
 - **Pruebas:** Jest (entorno Node) con `ts-jest`
 - **Linter:** `eslint` (`^9.0.0`) + `eslint-config-expo` (`~58.0.4`)
@@ -244,6 +250,8 @@ npm run ios          # abre en simulador de iOS (requiere macOS)
 npm run web          # versión web
 npm run typecheck    # tsc --noEmit
 npm run lint         # ESLint con configuración de Expo
+npm run lint:arch    # ESLint con regla de arquitectura hexagonal (no-restricted-imports)
+npm run test:domain  # pruebas unitarias del dominio
 npx eslint src --no-cache   # revisión completa, incluida la regla de arquitectura
 npx jest             # todas las pruebas (dominio, aplicación e infraestructura)
 ```

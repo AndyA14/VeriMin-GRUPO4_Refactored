@@ -3,6 +3,9 @@ import { StyleSheet, Text, View } from 'react-native';
 import { colors, fonts } from '../theme';
 import { BrandMark } from './BrandMark';
 
+/**
+ * Componente de identidad corporativa VeriMind Analytics (isotipo + logotipo textual).
+ */
 export function Logo() {
   return (
     <View style={styles.row} accessible accessibilityLabel="VeriMind Analytics">
