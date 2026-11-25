@@ -25,7 +25,7 @@
 
 **Problema:** las marcas que consideran colaboraciones con creadores de contenido necesitan interpretar señales sobre audiencia, publicaciones y clima de comentarios. La información está dispersa y una métrica aislada, como número de seguidores, no basta para sustentar una evaluación.
 
-**Research de soluciones similares:** el equipo documentó un análisis comparativo de plataformas existentes (HypeAuditor, Modash, Heepsy y otras), disponible en [Confluence](https://verimind.atlassian.net/wiki/external/MzZmNjIzYjIwZjU2NDFkMGJmYWY0NmU3ZmQ1YWVkMGU). El estudio identifica referentes, no demuestra que VeriMind supere sus prestaciones.
+**Research de soluciones similares:** el equipo documentó un análisis comparativo de plataformas existentes (HypeAuditor, Modash, Heepsy y otras), disponible en Confluence. El estudio identifica referentes, no demuestra que VeriMind supere sus prestaciones.
 
 **Propuesta:** una aplicación móvil que muestra un flujo de consulta y resultados ilustrativos de perfiles públicos (referencia principal: TikTok), con indicadores estadísticos, resúmenes visuales y módulos de apoyo. **No es una auditoría real ni una herramienta de diagnóstico psicológico.**
 
