@@ -4,7 +4,7 @@
 **Dispositivos Móviles · Grupo 4**
 
 **Integrantes:** Andrés Aucancela, Carlos Patiño, Joseph Ponce y Petter Rodriguez
-**Docente:** [COMPLETAR]
+**Docente:** Ing. Diego Noguera
 
 Aplicación móvil (React Native + Expo) para auditar perfiles públicos de creadores de contenido, construida a partir del prototipo de Figma «Moviles» y reorganizada con **Domain-Driven Design (DDD) y arquitectura hexagonal**.
 
@@ -137,7 +137,7 @@ Documento técnico: [Arquitectura hexagonal en Confluence](https://verimind.atla
 | Integrante | Rama | Qué hizo / se encarga de | Pull Request |
 |---|---|---|---|
 | Andrés Aucancela | `feat/ddd-shared-kernel` | Shared Kernel (`Entity`, `ValueObject`, `Result`, `DomainEvent`, `CasoDeUso`), contenedor, alias de TypeScript, regla de ESLint y Jest | #1 (integrado) |
-| Petter Rodriguez | `Petter` | Documentación: README y páginas de Confluence | #2 (integrado) |
+| Petter Rodriguez | `Petter` | Documentación: README, páginas de Confluence, Jira | #2 (integrado) |
 | Carlos Patiño | `feat/ddd-context-analisis` | Contexto de análisis: `Handle`, `PruebaBenford`, `NivelRiesgo`, `CuentaCreador`, puertos, casos de uso `AnalizarCuenta` y `ObtenerResultado`, adaptadores en memoria y conexión de las pantallas `buscar`, `resultado`, `informe` y `chat` | #3 (integrado) |
 | Joseph Ponce | `feat/ddd-context-identity` | Contexto de identidad: `Email`, `Contrasena`, `Usuario`, `IniciarSesion`, repositorio en memoria, registro en el contenedor y conexión del login | #4 (integrado) |
 | Joseph Ponce | `docs/readme-completo` | README completo: DDD, hexagonal, equipo, enlaces y estado real | #5 (integrado) |
