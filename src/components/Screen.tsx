@@ -49,12 +49,11 @@ export function Screen({ title, children, footer, overlay, contentStyle }: Props
             paddingHorizontal: layout.screenX,
             paddingBottom: footer ? 24 : insets.bottom + 24,
           },
-          contentStyle,
         ]}
         showsVerticalScrollIndicator={false}
         keyboardShouldPersistTaps="handled"
       >
-        <View style={styles.centerContent}>{children}</View>
+        <View style={[styles.centerContent, contentStyle]}>{children}</View>
       </ScrollView>
 
       {footer ? (

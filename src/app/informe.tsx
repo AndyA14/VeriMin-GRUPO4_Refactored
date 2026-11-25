@@ -100,24 +100,29 @@ export default function ReportScreen() {
 
       <Text style={styles.caption}>Redacción asistida por IA (versión futura). Es un apoyo para decidir, no una prueba.</Text>
 
-      <Button label="Descargar informe (PDF)" onPress={() => notify('Reporte de verificación generado (PDF)')} />
+      <Button
+        label="Descargar informe (PDF)"
+        onPress={() => notify('Reporte de verificación generado (PDF)')}
+        style={styles.downloadButton}
+      />
     </Screen>
   );
 }
 
 const styles = StyleSheet.create({
-  content: { paddingTop: 16, gap: 24, paddingBottom: 60 },
-  headerBlock: { gap: 10, alignItems: 'flex-start' },
+  content: { paddingTop: 20, gap: 24, paddingBottom: 80 },
+  headerBlock: { gap: 8, alignItems: 'flex-start' },
   title: { ...text.title24, color: colors.text },
-  recommendation: { paddingVertical: 16, paddingHorizontal: 16, gap: 10 },
+  recommendation: { paddingVertical: 18, paddingHorizontal: 18, gap: 12, borderRadius: radius.md },
   recTitle: { ...text.strong14, lineHeight: 20, color: colors.warningText },
-  recBody: { ...text.body13, lineHeight: 19, color: colors.warningBody },
-  evidenceSection: { gap: 12 },
-  sectionTitle: { ...text.label13, color: colors.text, marginBottom: 2 },
-  evidenceRow: { flexDirection: 'row', alignItems: 'center', gap: 12, paddingVertical: 14, paddingHorizontal: 16 },
+  recBody: { ...text.body13, lineHeight: 20, color: colors.warningBody },
+  evidenceSection: { gap: 14 },
+  sectionTitle: { ...text.label13, color: colors.text, marginBottom: 4 },
+  evidenceRow: { flexDirection: 'row', alignItems: 'center', gap: 14, paddingVertical: 16, paddingHorizontal: 18, borderRadius: radius.md },
   evidenceText: { flex: 1, gap: 4 },
-  evidenceStack: { gap: 10, paddingVertical: 14, paddingHorizontal: 16 },
+  evidenceStack: { gap: 12, paddingVertical: 16, paddingHorizontal: 18, borderRadius: radius.md },
   evidenceTitle: { ...text.strong14, lineHeight: 18, color: colors.text },
-  evidenceSub: { ...text.body12, lineHeight: 16, color: colors.textMuted },
-  caption: { ...text.caption10, lineHeight: 15, color: colors.textMuted },
+  evidenceSub: { ...text.body12, lineHeight: 17, color: colors.textMuted },
+  caption: { ...text.caption10, lineHeight: 16, color: colors.textMuted, marginTop: 4 },
+  downloadButton: { marginTop: 8 },
 });
