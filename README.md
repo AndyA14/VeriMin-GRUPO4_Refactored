@@ -7,11 +7,13 @@
 
 > **Alcance académico:** prototipo de **frontend móvil interactivo** construido con React Native y Expo Router. Su objetivo es demostrar interfaces, navegación, organización por componentes, modelado DDD y arquitectura hexagonal **mediante lógica local, datos ilustrativos y adaptadores simulados**. No se exige ni se afirma un backend productivo.
 
-> **Corte de revisión:** 24–25 de noviembre de 2026. Se consultaron el árbol de `main` y los PRs #1–#12: **todos figuran fusionados** en el corte. Los PRs #10 (responsive/JSDoc), #11 (documentación) y #12 (app/tema/script de pruebas) forman parte de la rama principal. Las pruebas de 15 suites/63 casos están **reportadas en los PRs y Confluence**, pero no fueron ejecutadas de forma independiente en esta auditoría.
+> **Corte de revisión documental:** 24 de noviembre de 2026 (hora de Ecuador). Se consultaron el árbol de `main` y los PRs #1–#12: **todos figuran fusionados** en el corte. Los PRs #10 (responsive/JSDoc), #11 (documentación) y #12 (app/tema/script de pruebas) forman parte de la rama principal. Las pruebas de 15 suites/63 casos están **reportadas en los PRs y Confluence**, pero no fueron ejecutadas de forma independiente en esta auditoría.
 
 ## Navegación rápida
 
 - [Problema y alcance](#problema-y-alcance)
+- [Research competitivo](#documentación-en-confluence)
+- [Atomic Design y Figma](#información-técnica-ampliada)
 - [Diseño DDD](#ddd-y-lenguaje-ubicuo)
 - [Arquitectura hexagonal](#arquitectura-hexagonal)
 - [Estado técnico y simulaciones](#estado-técnico-y-simulaciones)
@@ -22,6 +24,8 @@
 ## Problema y alcance
 
 **Problema:** las marcas que consideran colaboraciones con creadores de contenido necesitan interpretar señales sobre audiencia, publicaciones y clima de comentarios. La información está dispersa y una métrica aislada, como número de seguidores, no basta para sustentar una evaluación.
+
+**Research de soluciones similares:** el equipo documentó un análisis comparativo de plataformas existentes (HypeAuditor, Modash, Heepsy y otras), disponible en [Confluence](https://verimind.atlassian.net/wiki/external/MzZmNjIzYjIwZjU2NDFkMGJmYWY0NmU3ZmQ1YWVkMGU). El estudio identifica referentes, no demuestra que VeriMind supere sus prestaciones.
 
 **Propuesta:** una aplicación móvil que muestra un flujo de consulta y resultados ilustrativos de perfiles públicos (referencia principal: TikTok), con indicadores estadísticos, resúmenes visuales y módulos de apoyo. **No es una auditoría real ni una herramienta de diagnóstico psicológico.**
 
@@ -57,7 +61,7 @@
 | Usuario | Identidad local del prototipo | `Usuario` del contexto `identity` |
 | Plan y suscripción | Oferta y estado comercial mostrados en pantalla | Datos locales; contexto `facturacion` no implementado |
 
-La [definición ampliada del lenguaje ubicuo](https://verimind.atlassian.net/wiki/external/YmJkNDI4NjQ3NDhhNDgyMDhjMWVjODVmNWZhMmM3N2I) está en Confluence. Debe mantenerse coherente con los nombres de código, aunque los términos de negocio estén en español y algunas carpetas en inglés.
+La [definición ampliada del lenguaje ubicuo](https://verimind.atlassian.net/wiki/external/YmNmODNlYzJhYWNkNGI5OGJhNDEwOGNjZjQ4ZTRiZjE) está en Confluence. Debe mantenerse coherente con los nombres de código, aunque los términos de negocio estén en español y algunas carpetas en inglés.
 
 ### Diseño estratégico — Bounded Contexts
 
@@ -129,11 +133,12 @@ La **arquitectura hexagonal se aplica en el frontend**, con dominio y aplicació
 | Característica | Estado y alcance |
 |---|---|
 | Navegación por pantallas | Implementada con Expo Router |
+| **Atomic Design** | Diseño de componentes y tokens documentado en [Figma y Confluence](https://verimind.atlassian.net/wiki/external/NTcyNTMxMjJlYmZmNDY1MjlmY2ZiZWE1NjY1NjhhNzM); clasificación lógica de átomos, moléculas, organismos, plantillas y pantallas |
 | Login | Caso de uso local; verifica formato y longitud, **no credenciales reales** |
 | Análisis de perfiles | Caso de uso real sobre **datos de prueba fijos** |
 | Benford | Existe cálculo estadístico en dominio; **el flujo mock usa χ² precalculado** |
 | Riesgo y comentarios | Reglas/invariantes locales; valores de muestra |
-| Chat | Mensajería simulada, no modelo de IA externo |
+| Chat | Respuestas locales predefinidas (`chatSeed`); no consulta un servicio de IA externo |
 | Informes y PDF | Pantalla ilustrativa; el botón de PDF muestra Toast, no crea archivo |
 | Planes/pago | Flujos visuales, no facturación de producción |
 | Adaptación 9:16, 16:9 y 1:1 | **Cambios integrados mediante PR #10.** Aún se necesitan capturas/pruebas específicas para acreditar cada formato; `app.json` mantiene `orientation: portrait`. |
@@ -150,38 +155,65 @@ La **arquitectura hexagonal se aplica en el frontend**, con dominio y aplicació
 | Joseph Ponce (`JosephP2001`) | Identidad y acceso; Benford desde métricas; documentación e integración | [#4 fusionado](https://github.com/AndyA14/VeriMin-GRUPO4_Refactored/pull/4), [#5](https://github.com/AndyA14/VeriMin-GRUPO4_Refactored/pull/5), [#6](https://github.com/AndyA14/VeriMin-GRUPO4_Refactored/pull/6), [#8](https://github.com/AndyA14/VeriMin-GRUPO4_Refactored/pull/8), [#9](https://github.com/AndyA14/VeriMin-GRUPO4_Refactored/pull/9) fusionados |
 | Petter Rodriguez (`Petterouski`) | README, documentación técnica y coordinación de Confluence | [#2 fusionado](https://github.com/AndyA14/VeriMin-GRUPO4_Refactored/pull/2), [#11 fusionado](https://github.com/AndyA14/VeriMin-GRUPO4_Refactored/pull/11) |
 
+### Ramas principales por integrante
+
+| Integrante | Ramas registradas |
+|---|---|
+| Andrés Aucancela | `feat/ddd-shared-kernel`, `fix-responsive-and-comments` |
+| Carlos Patiño | `feat/ddd-context-analisis` |
+| Joseph Ponce | `feat/ddd-context-identity`, `docs/readme-completo`, `feat/benford-desde-metricas`, `fix/restaurar-benford`, `feat/login-validacion`, `chore/scripts-calidad`, `chore/app-config-y-test` |
+| Petter Rodríguez | `Petter` (documentación) |
+
+**Nota:** algunas ramas corresponden al trabajo inicial del repositorio original y otras al refactorizado; consultar el PR de cada cambio para atribuirlo correctamente.
+
 **Contribución adicional:** el PR [#12](https://github.com/AndyA14/VeriMin-GRUPO4_Refactored/pull/12) (Joseph) integra el nombre VeriMind Analytics, tema oscuro y script `npm test`. **Flujo:** feature branches, commits por responsabilidad, PRs a `main`, revisión y fusión. El historial de GitHub es la evidencia de integración. El PR #7 fue un revert temporal de Benford, seguido por su reaplicación en el PR #9.
 
 ## Documentación en Confluence
 
-| Documento | Enlace |
-|---|---|
-| Lenguaje ubicuo | [Consultar](https://verimind.atlassian.net/wiki/external/YmJkNDI4NjQ3NDhhNDgyMDhjMWVjODVmNWZhMmM3N2I) |
-| Diseño estratégico DDD | [Consultar](https://verimind.atlassian.net/wiki/external/YzRjMmE4NDNhOGM5NDJkN2JjMDlhMjRjZDRkYmM0M2M) |
-| Diseño táctico DDD | [Consultar](https://verimind.atlassian.net/wiki/external/N2ZjOTc4ZDk3ODgwNGZmYzgwMTlmNzAzYTcxMWMxMmY) |
-| Arquitectura hexagonal | [Consultar](https://verimind.atlassian.net/wiki/external/ZGM2ZjdjZDBkZTgzNDhmODgwNmRjMmNkOTcxZWI3ZmQ) |
-| Organización del desarrollo | [Consultar](https://verimind.atlassian.net/wiki/external/ZjRjMzk5NzgwMWZhNDVhYzg0ODE1ZTIzN2YxNzgwNjQ) |
-### Documentación principal: Confluence, bloques A–E
+La documentación técnica principal se organiza en los bloques A–E de Confluence. Se enlazan las **URL de uso compartido externo** (`/wiki/external/`) facilitadas por el equipo y publicadas en el índice. Para confirmar acceso sin cuenta, abrirlas en una ventana privada.
 
-**Índice:** [0 · Inicio e índice](https://verimind.atlassian.net/wiki/spaces/VE/pages/1048637/0+Inicio+e+ndice).
+### Bloques principales
 
-| Bloque | Enlace | Contenido |
+| Bloque | Documentación | Acceso compartido |
 |---|---|---|
-| A · Contexto y descubrimiento | [Ver bloque](https://verimind.atlassian.net/wiki/spaces/VE/pages/1114288/Bloque+A+Contexto+y+descubrimiento) | Problema, actores, AS-IS, TO-BE |
-| B · Dominio estratégico | [Ver bloque](https://verimind.atlassian.net/wiki/spaces/VE/pages/1048698/Bloque+B+Dominio+estrat+gico) | Lenguaje ubicuo, reglas, subdominios, Context Map |
-| C · Dominio táctico | [Ver bloque](https://verimind.atlassian.net/wiki/spaces/VE/pages/1016008/Bloque+C+Dominio+t+ctico) | Agregados, Value Objects, casos de uso y eventos |
-| D · Arquitectura e interfaz | [Ver bloque](https://verimind.atlassian.net/wiki/spaces/VE/pages/1048706/Bloque+D+Arquitectura+e+interfaz) | Hexagonal, Atomic Design, navegación, ADRs |
-| E · Calidad | [Ver bloque](https://verimind.atlassian.net/wiki/spaces/VE/pages/1114296/Bloque+E+Calidad) | Pruebas, evidencias, organización/Jira |
+| A | Contexto, definición del problema, actores, AS-IS, TO-BE y Research | [Abrir Bloque A](https://verimind.atlassian.net/wiki/external/ZmFjNzVhZTM3NmIwNDJmYTk3MjAzOTk5Njk0Njg3NTE) |
+| B | Lenguaje ubicuo, reglas e invariantes, subdominios y Context Map | [Abrir Bloque B](https://verimind.atlassian.net/wiki/external/NzJiOTU0OWMxY2RjNGIwMmJmZmUzYWRkN2M0MWRmNGU) |
+| C | Diseño táctico: agregados, entidades, objetos de valor y casos de uso | [Abrir Bloque C](https://verimind.atlassian.net/wiki/external/MTAxYjM0NGJiNzYzNDQwMWI5MTJhMjQ3Y2M2ZmJlNTY) |
+| D | Arquitectura hexagonal, Atomic Design, Figma, navegación y ADRs | [Abrir Bloque D](https://verimind.atlassian.net/wiki/external/NmQ1MGM5YWRiMjIyNDc0ODkxMTBlNDNjNjNmYjIxNDc) |
+| E | Pruebas, evidencias y organización del desarrollo | [Abrir Bloque E](https://verimind.atlassian.net/wiki/external/OGEzNTc1MGFjNmJmNDViZGEzNDJkNzdmNTQ5MzhiM2M) |
 
-**Documentos técnicos específicos:** [Reglas e invariantes](https://verimind.atlassian.net/wiki/spaces/VE/pages/1081434/6+Reglas+e+invariantes) · [Contextos y mapa](https://verimind.atlassian.net/wiki/spaces/VE/pages/1048578/8+Contextos+y+mapa) · [Casos de uso](https://verimind.atlassian.net/wiki/spaces/VE/pages/1048598/11+Casos+de+uso+y+servicios) · [Arquitectura hexagonal](https://verimind.atlassian.net/wiki/spaces/VE/pages/1081358/13+Arquitectura+hexagonal) · [Pruebas y verificación](https://verimind.atlassian.net/wiki/spaces/VE/pages/1015843/17+Pruebas+y+verificaci+n) · [Organización del desarrollo](https://verimind.atlassian.net/wiki/spaces/VE/pages/1015869/19+Organizaci+n+del+desarrollo).
+### Documentos de consulta directa
 
-**Páginas originales (histórico):** los cinco enlaces anteriores se conservan para trazabilidad; la actualización de contenido debe centralizarse en los bloques A–E una vez el equipo confirme esta decisión.
+| Recurso | Enlace compartido |
+|---|---|
+| **Definición del problema** | [Consultar](https://verimind.atlassian.net/wiki/external/MjFmMWMzZWU1NGY2NGRkZDkwZjVmODc1OWRmYWYyMzQ) |
+| **Proceso AS-IS** | [Consultar](https://verimind.atlassian.net/wiki/external/OGJiNGQ1NmU3YjMzNGY3MDlmYjljMTdiNDE4MTBiZmE) |
+| **Proceso TO-BE** | [Consultar](https://verimind.atlassian.net/wiki/external/ODRjMDc2NjA1YTE3NDEzZmE5YmJmMTNlYjhjNzA4Y2Y) |
+| **Research competitivo** | [Investigación de soluciones similares](https://verimind.atlassian.net/wiki/external/MzZmNjIzYjIwZjU2NDFkMGJmYWY0NmU3ZmQ1YWVkMGU) |
+| Lenguaje ubicuo ampliado | [Consultar](https://verimind.atlassian.net/wiki/external/YmNmODNlYzJhYWNkNGI5OGJhNDEwOGNjZjQ4ZTRiZjE) |
+| Reglas e invariantes | [Consultar](https://verimind.atlassian.net/wiki/external/ZGRjNzgwYzdhMzU3NDdmZTg1ZTEzYzFmMjlkMjkzZDk) |
+| Subdominios | [Consultar](https://verimind.atlassian.net/wiki/external/MTJmOGZhMmRlM2MyNGI1N2JhODZkMGI3NTkxYjc1ZDM) |
+| Bounded Contexts y Context Map | [Consultar](https://verimind.atlassian.net/wiki/external/MzQwODc3MDRhZDFjNDZkMDgyOTIxYTk2MDMzYTZjYmI) |
+| Agregados y entidades | [Consultar](https://verimind.atlassian.net/wiki/external/YWJjYjAxOTQ0Njc4NDAwZmExOGZhYmMzYjc5NTc1ZDQ) |
+| Objetos de valor | [Consultar](https://verimind.atlassian.net/wiki/external/YzAxZjY3NDgyYjZkNDkzNmIwNDkxN2MzODc4MmJlYzU) |
+| Casos de uso | [Consultar](https://verimind.atlassian.net/wiki/external/NWYxMzA3YWUxNDRlNDUyYmJkNDMwMWU5MzJkODI5ZGM) |
+| Arquitectura hexagonal | [Consultar](https://verimind.atlassian.net/wiki/external/MGY1ZjViZDc3ZWQyNGMxOWE4YzQyOGE3NGZkYmVhMDM) |
+| **Atomic Design y Figma** | [Consultar](https://verimind.atlassian.net/wiki/external/NTcyNTMxMjJlYmZmNDY1MjlmY2ZiZWE1NjY1NjhhNzM) |
+| Prototipo y navegación | [Consultar](https://verimind.atlassian.net/wiki/external/MzI5M2ZhMDk1MmNlNDkzZWE0ZDY5YTU2YWJmM2ZlYjc) |
+| Pruebas y verificación | [Consultar](https://verimind.atlassian.net/wiki/external/M2M5NzdmZGQyNWI4NDUxYTkyMWEyM2M1YmM4NTk2NjI) |
+| Organización del desarrollo | [Consultar](https://verimind.atlassian.net/wiki/external/NmQ5NjY4YzNlN2RhNDVmZGFhMjZmMzQ0ZjNjM2Y0Y2U) |
 
-| Repositorio refactorizado | [GitHub](https://github.com/AndyA14/VeriMin-GRUPO4_Refactored) |
-| Repositorio anterior | [GitHub](https://github.com/AndyA14/VeriMind-Gmoviles) |
-| Prototipo Figma | [Moviles — VeriMind](https://www.figma.com/design/Wyt8RCSYYWKs4xzLd5ptPF/Moviles?node-id=0-1) |
+**Material documental previo:** las primeras páginas de lenguaje ubicuo, diseño estratégico, diseño táctico, arquitectura y organización siguen disponibles como antecedentes del proyecto. Los bloques A–E constituyen el punto de navegación recomendado.
 
-**Nota de revisión:** se consultaron directamente por la integración Atlassian las páginas del espacio `VE`. Se detectaron **dos familias documentales**: las cinco páginas originales y el conjunto posterior **«0 · Inicio e índice» + bloques A–E**. Para evitar duplicación, se propone este último como fuente principal y dejar las páginas originales como material histórico/complementario, sin borrarlas sin acuerdo del equipo.
+### Enlaces del proyecto
+
+| Recurso | Enlace |
+|---|---|
+| Repositorio refactorizado | [Ver GitHub](https://github.com/AndyA14/VeriMin-GRUPO4_Refactored) |
+| Repositorio anterior | [Ver GitHub](https://github.com/AndyA14/VeriMind-Gmoviles) |
+| Diseño y prototipos en Figma | [Abrir archivo Moviles](https://www.figma.com/design/Wyt8RCSYYWKs4xzLd5ptPF/Moviles?node-id=161-131) |
+| Jira | [Tablero KAN](https://verimind.atlassian.net/jira/software/projects/KAN/boards) |
+| Página de enlaces de Confluence | [Abrir](https://verimind.atlassian.net/wiki/external/NjU3YzNlODk3NTE1NDcxZDk4OGJhYjc2MzE0MDM2MWM) |
 
 ## Información técnica ampliada
 
@@ -207,10 +239,17 @@ Las siguientes secciones pueden **desplegarse y contraerse** en la vista de GitH
 
 ## Diseño en Figma
 
-Enlace al archivo y prototipo de Figma utilizado para el diseño y construcción de las 16 pantallas de la aplicación:
+El archivo «Moviles» documenta componentes reutilizables y el prototipo. Los enlaces por nodo permiten acceder directamente a los formatos considerados por el equipo.
 
-- **Diseño en Figma:** [Moviles — VeriMind](https://www.figma.com/design/Wyt8RCSYYWKs4xzLd5ptPF/Moviles?node-id=0-1&t=jTQnLaIv0eh2W7GM-1)
-- **Enlace directo:** `https://www.figma.com/design/Wyt8RCSYYWKs4xzLd5ptPF/Moviles?node-id=0-1&t=jTQnLaIv0eh2W7GM-1`
+| Recurso | Enlace |
+|---|---|
+| Archivo general | [Figma «Moviles»](https://www.figma.com/design/Wyt8RCSYYWKs4xzLd5ptPF/Moviles?node-id=161-131) |
+| **Diseño 9:16** | [Nodo 161-134](https://www.figma.com/design/Wyt8RCSYYWKs4xzLd5ptPF/Moviles?node-id=161-134) |
+| **Diseño 16:9** | [Nodo 161-135](https://www.figma.com/design/Wyt8RCSYYWKs4xzLd5ptPF/Moviles?node-id=161-135) |
+| **Diseño 1:1** | [Nodo 161-136](https://www.figma.com/design/Wyt8RCSYYWKs4xzLd5ptPF/Moviles?node-id=161-136) |
+| Atomic Design | [Documentación en Confluence](https://verimind.atlassian.net/wiki/external/NTcyNTMxMjJlYmZmNDY1MjlmY2ZiZWE1NjY1NjhhNzM) |
+
+**Nota:** los nodos anteriores fueron indicados por el equipo; verificar en Figma que cada uno corresponde a la proporción señalada y que existe una variante de las pantallas esperadas. El código responsive integrado y el diseño no sustituyen la evidencia de pruebas visuales.
 
 ---
 
@@ -228,7 +267,7 @@ La aplicación es un prototipo interactivo funcional desarrollado con **Expo Rou
 - **Validación de formulario (sin autenticación real):** `IniciarSesion` valida `Email` y `Contrasena` (al menos 6 caracteres), crea usuarios en memoria al primer acceso y devuelve un nombre para personalizar la interfaz; no verifica contraseñas guardadas.
 - **Flujo Dinámico de Usuario:** El handle ingresado en la búsqueda (`@usuario`) se normaliza y propaga globalmente a través del estado (`AppState`), reflejándose en las pantallas de Resultado y Chat.
 - **Procesamiento Animado:** Pantalla de análisis por etapas con barra de progreso animada continua (`Animated`), spinner personalizado e inspección visual simulada de publicaciones.
-- **Asistente Interactivo Simulado:** Chat local con envío de mensajes, scroll automático, nombre del usuario y respuestas predefinidas de `chatSeed`, sin conexión a un modelo de IA.
+- **Asistente Interactivo Simulado:** Chat local con envío de mensajes, scroll automático y respuestas predefinidas de `chatSeed`; no utiliza un modelo de IA externo.
 - **Informes y Métricas Simulados:** Visualización de proporciones Big Five y rangos de edad mediante gráficos de barras apiladas (`StackedBar`), métricas de riesgo y anomalías de Benford.
 - **Módulo de Apoyo al Creador:** Selector reactivo de casos de riesgo (acoso, tensión) y panel deslizable (`BottomSheet`) con recursos y canales de ayuda.
 - **Planes y Suscripción Simulados:** Selección de planes (Gratis, Esencial, Profesional y Agencia), pasarela simulada con métodos de pago (tarjeta/transferencia) y sistema de notificaciones flotantes (*Toast*).
@@ -441,7 +480,7 @@ app.json                Configuración de la aplicación Expo
 
 - **Inicio de sesión simulado mediante un caso de uso:** `IniciarSesion` valida `Email` y `Contrasena` (al menos seis caracteres) y crea un `Usuario` en el repositorio en memoria cuando no existe. **No comprueba contraseñas contra credenciales registradas ni constituye autenticación real.**
 - **Estado local y casos de uso:** `AnalizarCuenta` utiliza `Handle.crear`, obtiene la cuenta de `ExtractorMock` y guarda el resultado con `RepositorioAnalisisEnMemoria`; `ObtenerResultado` consulta el último resultado. `AppState` mantiene información visual del flujo. Los datos se pierden al cerrar/reiniciar la aplicación.
-- **Simulación del Asistente (sin IA conectada):** El chat permite enviar mensajes en tiempo real, añade las intervenciones a una lista local, efectúa desplazamiento automático y responde de forma asistida (con retraso realista de 600 ms) sin requerir servicios externos de terceros ni claves de API.
+- **Simulación del Asistente (sin IA conectada):** El chat permite enviar mensajes en tiempo real, añade las intervenciones a una lista local, efectúa desplazamiento automático y muestra respuestas locales predefinidas (con retraso realista de 600 ms) sin requerir servicios externos de terceros ni claves de API.
 - **Reporte PDF (simulado):** Al pulsar el botón de descarga se presenta una notificación flotante (*Toast*); el código revisado no crea ni descarga un archivo PDF.
 - **Animaciones e Interacciones:** La etapa de procesamiento emplea animación fluida a través de la API `Animated` de React Native para el llenado de la barra según los pasos estipulados en el diseño.
 - **Pasarela de Pagos (simulada):** La pantalla de pagos permite alternar entre tarjeta y transferencia bancaria, reflejando el cambio de estado tanto en el chip de la pantalla de búsqueda como en el contexto global de la aplicación.
