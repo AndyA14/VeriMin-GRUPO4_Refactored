@@ -212,7 +212,7 @@ La documentación técnica principal se organiza en los bloques A–E de Conflue
 | Repositorio refactorizado | [Ver GitHub](https://github.com/AndyA14/VeriMin-GRUPO4_Refactored) |
 | Repositorio anterior | [Ver GitHub](https://github.com/AndyA14/VeriMind-Gmoviles) |
 | Diseño y prototipos en Figma | [Abrir archivo Moviles](https://www.figma.com/design/Wyt8RCSYYWKs4xzLd5ptPF/Moviles?node-id=161-131) |
-| Jira | [Tablero KAN](https://verimind.atlassian.net/jira/software/projects/KAN/boards) |
+| Jira | [Tablero KAN](https://verimind.atlassian.net/wiki/external/NThmN2UyZTY1ZTBjNGRmMjhkNTEzOTJmYmRmMTFjY2Y) |
 | Página de enlaces de Confluence | [Abrir](https://verimind.atlassian.net/wiki/external/NjU3YzNlODk3NTE1NDcxZDk4OGJhYjc2MzE0MDM2MWM) |
 
 ## Información técnica ampliada
@@ -228,7 +228,7 @@ Las siguientes secciones pueden **desplegarse y contraerse** en la vista de GitH
 - **Andy:** Claude Sonet 5.5 y Gemini Flash 3.8
 - **Carlos:** Claude Sonet 5.5
 - **Joseph:** Claude Opus 5.5
-- **Petter:** Gemini Argon
+- **Petter:** Chat GPT
 
 ---
 
