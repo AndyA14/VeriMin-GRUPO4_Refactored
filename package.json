@@ -35,6 +35,7 @@
     "web": "expo start --web",
     "lint": "expo lint",
     "lint:arch": "eslint src",
+    "test": "jest",
     "test:domain": "jest src/.*domain",
     "typecheck": "tsc --noEmit"
   },
